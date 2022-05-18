@@ -1,0 +1,17 @@
+.song {
+    width: 100px;
+    font-size: 12px;
+}
+
+.thumbnail {
+    height: 55px;
+    width: 100px;
+    background-size: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    background-position: center center;
+}
+
+div#listdata-table {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+}

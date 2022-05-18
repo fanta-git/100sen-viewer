@@ -1,0 +1,38 @@
+{
+  "name": "100sen-viewer",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run build && npm run serve",
+    "build": "cross-env NODE_ENV=\"development\" webpack --progress",
+    "serve": "electron .",
+    "watch": "cross-env NODE_ENV=\"development\" webpack --progress --watch"
+  },
+  "keywords": [],
+  "author": "fanta",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^17.0.34",
+    "@types/react": "^18.0.9",
+    "@types/react-dom": "^18.0.4",
+    "@types/request": "^2.48.8",
+    "cross-env": "^7.0.3",
+    "css-loader": "^6.7.1",
+    "electron": "^18.2.3",
+    "electron-reload": "^2.0.0-alpha.1",
+    "html-webpack-plugin": "^5.5.0",
+    "mini-css-extract-plugin": "^2.6.0",
+    "ts-loader": "^9.3.0",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.4",
+    "webpack": "^5.72.1",
+    "webpack-cli": "^4.9.2"
+  },
+  "dependencies": {
+    "node-fetch": "^3.2.4",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0"
+  }
+}
