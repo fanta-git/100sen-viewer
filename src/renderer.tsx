@@ -3,10 +3,6 @@ import ReactDOM from 'react-dom';
 
 import makePlaylistTable from './makePlaylistTable';
 
-type States = {
-    filename: string
-};
-
 const RootDiv: React.FC = prop => {
     const [getPlaylistId, setPlaylistId] = React.useState('');
     const [getPlaylistTable, setPlaylistTable] = React.useState(<></>);
@@ -16,8 +12,11 @@ const RootDiv: React.FC = prop => {
     };
 
     const handleOnClick = async () => {
-        const result = await window.api.getPlaylistSongs(getPlaylistId);
-        setPlaylistTable(result ? makePlaylistTable({ videoDataList: result })! : <>プレイリストの取得に失敗しました</>);
+        const videoIds = await window.api.getPlaylistSongs('Kiite', getPlaylistId);
+        if (videoIds === undefined) throw Error('プレイリストの取得に失敗しました');
+        const result = await window.api.getSongDetails(videoIds);
+        const playlistTable = makePlaylistTable({ videoDataList: result })!;
+        setPlaylistTable(playlistTable);
     }
 
     return (
