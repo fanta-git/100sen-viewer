@@ -1,7 +1,8 @@
 import { contextBridge } from "electron";
 import fetch from 'node-fetch';
+import getAPI from "./getAPI";
 
-import type { PlaylistContents, SongData } from './types';
+import type { PlaylistContents, KiiteSongData } from './types';
 
 type playlistTypes = 'Kiite' | 'niconico';
 type typeParseQueryParam = (url: string, param?: Record<string, number | string | number[] | string[]>) => string;
@@ -28,19 +29,15 @@ const preload = {
     getSongDetails: async (videoIds: string[]) => {
         const stableQuery = {
             q: '',
-            fields: ['title', 'thumbnailUrl'],
+            fields: ['title', 'thumbnailUrl', 'userId'] as const,
             _sort: "+viewCounter",
-            _limit: "100",
+            _limit: 100,
             _context: "100sen-viewer"
-        };
-        const videoIdsEntries: [string, string][] = videoIds.map((v, k) => [`filters[contentId][${k}]`, v]);
+        } as const;
+        const videoIdsEntries = videoIds.map((v, k) => [`filters[contentId][${k}]`, v] as const);
         const videoIdsQuery = Object.fromEntries(videoIdsEntries);
-        const url = urlConnectParam(
-            'https://api.search.nicovideo.jp/api/v2/snapshot/video/contents/search',
-            { ...stableQuery, ...videoIdsQuery }
-        );
-        const songDatas = await fetch(url).then(v => v.json()) as SongData[];
-        return songDatas;
+        const test = await getAPI('https://api.search.nicovideo.jp/api/v2/snapshot/video/contents/search', { ...stableQuery, ...videoIdsQuery });
+        if ('data' in test) return test;
     }
 }
 

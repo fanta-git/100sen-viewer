@@ -15,7 +15,13 @@ const RootDiv: React.FC = prop => {
         const videoIds = await window.api.getPlaylistSongs('Kiite', getPlaylistId);
         if (videoIds === undefined) throw Error('プレイリストの取得に失敗しました');
         const result = await window.api.getSongDetails(videoIds);
-        const playlistTable = makePlaylistTable({ videoDataList: result })!;
+        if (result === undefined) throw Error('楽曲の読み込みに失敗しました');
+        const requiredData = result.data.map(v => ({
+            title: v.title,
+            thumbnail: v.thumbnailUrl,
+            userName: v.userId + ""
+        }));
+        const playlistTable = makePlaylistTable(requiredData)!;
         setPlaylistTable(playlistTable);
     }
 

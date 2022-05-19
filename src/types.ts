@@ -34,7 +34,7 @@ type FailedPlaylistContents = {
 
 export type PlaylistContents = SuccessPlaylistContents | FailedPlaylistContents;
 
-export type SongData = {
+export type KiiteSongData = {
     id: null;
     video_id: string;
     artist_name: string;
@@ -46,3 +46,28 @@ export type SongData = {
     title: string;
     video_thumbnail: string;
 };
+
+export type NicoVitaUserData = {
+    nicovideo_user_response: {
+        user: {
+            id: string,
+            nickname: string,
+            thumbnail_url: string
+        },
+        vita_option: {
+            user_secret: 0
+        },
+        additionanals: string,
+        '@status': 'ok'
+    }
+} | {
+    nicovideo_user_response: {
+        error: {
+            code: string,
+            description: string
+        },
+        '@status': 'fail'
+    }
+}
+
+export type NicoSnapshotv2Response = {}

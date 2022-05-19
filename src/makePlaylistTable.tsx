@@ -1,26 +1,26 @@
 import React from 'react';
 
-import type { SongData } from './types';
 import './style.css';
 
-type Props = {
-    videoDataList: SongData[]
+type requiredData = {
+    title: string | null,
+    thumbnail: string | null,
+    userName: string | null
 };
 
 const range = (size: number) => Array.from(Array(size).keys());
 
-const makePhotoHTML: React.FC<Props> = props => {
-    const { videoDataList } = props;
+const makePlaylistTable = (tableDatas: requiredData[]) => {
     const items: React.ReactElement[] = [];
-    for (const videoData of videoDataList) {
+    for (const videoData of tableDatas) {
         const bgiStyle: React.CSSProperties = {
-            backgroundImage: `url("${videoData.video_thumbnail}")`
+            backgroundImage: `url("${videoData.thumbnail}")`
         };
         items.push(
             <div className="song">
                 <div className="thumbnail" style={bgiStyle}></div>
                 <div className="title">{videoData.title}</div>
-                <div className="creator">{videoData.artist_name}</div>
+                <div className="creator">{videoData.userName}</div>
             </div>
         );
     }
@@ -31,4 +31,4 @@ const makePhotoHTML: React.FC<Props> = props => {
     );
 };
 
-export default makePhotoHTML;
+export default makePlaylistTable;
