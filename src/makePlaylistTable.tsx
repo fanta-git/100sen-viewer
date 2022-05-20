@@ -1,9 +1,9 @@
 import React from 'react';
 
 import './style.css';
-import { NicoThumbReturnFormat } from './types';
+import { SongDataForTable } from './types';
 
-const makePlaylistTable = (tableDatas: NicoThumbReturnFormat[]) => {
+const makePlaylistTable = (tableDatas: SongDataForTable[]) => {
     const items: React.ReactElement[] = [];
     for (const videoData of tableDatas) {
         items.push(
