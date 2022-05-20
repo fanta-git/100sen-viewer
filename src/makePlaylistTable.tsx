@@ -7,7 +7,7 @@ const makePlaylistTable = (tableDatas: NicoThumbReturnFormat[]) => {
     const items: React.ReactElement[] = [];
     for (const videoData of tableDatas) {
         items.push(
-            <div className="song">
+            <div className="song" key={items.length}>
                 <div className="thumbnail" style={{ backgroundImage: `url("${videoData.thumbnail}")` }}></div>
                 <div className="title">{videoData.title}</div>
                 <div className="creator">{videoData.userName}</div>
