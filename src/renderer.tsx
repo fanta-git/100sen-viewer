@@ -34,6 +34,7 @@ const RootDiv: React.FC = () => {
         <>
             <input type="text" onChange={handleOnChange} />
             <button onClick={handleOnClick}>表示</button>
+            <button onClick={convertPhotoClick}>画像化</button>
             {getPlaylistTable}
         </>
     );
