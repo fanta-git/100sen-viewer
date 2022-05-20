@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { NicoThumbReturnFormat } from './types';
+import { SongDataForTable } from './types';
 
 
 const CALL_API_INTERVAL = 10;
@@ -8,8 +8,8 @@ const API_URL = 'https://ext.nicovideo.jp/api/getthumbinfo/';
 const timer = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 const XMLReader = (doc: Document) => (tagName: string) => doc.querySelector(tagName)?.textContent ?? 'NoData';
 
-const getNicovideoData = async (videoIds: string[]) => {
-    const ret: NicoThumbReturnFormat[] = [];
+const getVideoData = async (videoIds: string[]) => {
+    const ret: SongDataForTable[] = [];
     for (const videoId of videoIds) {
         const response = await fetch(API_URL + videoId);
         if (!response.ok) continue;
@@ -28,4 +28,4 @@ const getNicovideoData = async (videoIds: string[]) => {
     return ret;
 };
 
-export default getNicovideoData;
+export default getVideoData;

@@ -47,7 +47,7 @@ export type KiiteSongData = {
     video_thumbnail: string;
 };
 
-export type NicoThumbReturnFormat = {
+export type SongDataForTable = {
     title: string,
     userName: string,
     thumbnail: string
