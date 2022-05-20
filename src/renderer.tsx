@@ -12,13 +12,8 @@ const RootDiv: React.FC = () => {
     };
 
     const handleOnClick = async () => {
-        const listIdExtracter = {
-            kiite: /https:\/\/kiite.jp\/playlist\/(\w*)/
-        };
-        const listId = getPlaylistURL.match(listIdExtracter.kiite)?.[1];
-        if (!listId) return;
-        console.log(listId);
-        const videoIds = await window.api.getKiitePlaylist(listId);
+        const videoIds = await window.api.getListData(getPlaylistURL);
+        if (videoIds === undefined) throw Error('URLが間違っています！');
         const result = await window.api.getVideoData(videoIds);
         const playlistTable = makePlaylistTable(result)!;
         setPlaylistTable(playlistTable);
