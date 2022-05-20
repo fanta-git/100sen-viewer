@@ -15,13 +15,11 @@ const RootDiv: React.FC = () => {
         const listIdExtracter = {
             kiite: /https:\/\/kiite.jp\/playlist\/(\w*)/
         };
-        const [, listId] = getPlaylistURL.match(listIdExtracter.kiite) ?? [];
+        const listId = getPlaylistURL.match(listIdExtracter.kiite)?.[1];
         if (!listId) return;
         console.log(listId);
-        const videoIds = await window.api.getAPI('https://cafe.kiite.jp/api/playlists/contents/detail', { list_id: listId });
-        if (videoIds.status === 'failed') throw Error('プレイリストの取得に失敗しました');
-        const listIds = videoIds.songs.map(v => v.video_id);
-        const result = await window.api.getNicovideoData(listIds);
+        const videoIds = await window.api.getKiitePlaylist(listId);
+        const result = await window.api.getVideoData(videoIds);
         const playlistTable = makePlaylistTable(result)!;
         setPlaylistTable(playlistTable);
     }

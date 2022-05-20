@@ -1,11 +1,11 @@
 import { contextBridge } from "electron";
 
-import getAPI from "./getAPI";
-import getNicovideoData from "./getNicovideoData";
+import * as getListData from './getListData';
+import getVideoData from "./getVideoData";
 
 const preload = {
-    getAPI,
-    getNicovideoData
+    ...getListData,
+    getVideoData
 };
 
 contextBridge.exposeInMainWorld('api', preload);

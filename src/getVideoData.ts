@@ -8,7 +8,7 @@ const API_URL = 'https://ext.nicovideo.jp/api/getthumbinfo/';
 const timer = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 const XMLReader = (doc: Document) => (tagName: string) => doc.querySelector(tagName)?.textContent ?? 'NoData';
 
-const getNicovideoData = async (videoIds: string[]) => {
+const getVideoData = async (videoIds: string[]) => {
     const ret: SongDataForTable[] = [];
     for (const videoId of videoIds) {
         const response = await fetch(API_URL + videoId);
@@ -28,4 +28,4 @@ const getNicovideoData = async (videoIds: string[]) => {
     return ret;
 };
 
-export default getNicovideoData;
+export default getVideoData;
