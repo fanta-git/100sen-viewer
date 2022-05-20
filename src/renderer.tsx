@@ -12,16 +12,12 @@ const RootDiv: React.FC = prop => {
     };
 
     const handleOnClick = async () => {
-        const videoIds = await window.api.getPlaylistSongs('Kiite', getPlaylistId);
-        if (videoIds === undefined) throw Error('プレイリストの取得に失敗しました');
-        const result = await window.api.getSongDetails(videoIds);
-        if (result === undefined) throw Error('楽曲の読み込みに失敗しました');
-        const requiredData = result.data.map(v => ({
-            title: v.title,
-            thumbnail: v.thumbnailUrl,
-            userName: v.userId + ""
-        }));
-        const playlistTable = makePlaylistTable(requiredData)!;
+        const videoIds = await window.api.getAPI('https://cafe.kiite.jp/api/playlists/contents/detail', { list_id: getPlaylistId });
+        if (videoIds.status === 'failed') throw Error('プレイリストの取得に失敗しました');
+        // const result = await window.api.getSongDetails(videoIds.songs.map(v => v.video_id));
+        const listIds = videoIds.songs.map(v => v.video_id);
+        const result = await window.api.getNicovideoData(listIds);
+        const playlistTable = makePlaylistTable(result)!;
         setPlaylistTable(playlistTable);
     }
 

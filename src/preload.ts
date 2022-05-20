@@ -1,8 +1,16 @@
 import { contextBridge } from "electron";
 import fetch from 'node-fetch';
-import getAPI from "./getAPI";
 
-import type { PlaylistContents, KiiteSongData } from './types';
+import getAPI from "./getAPI";
+import getNicovideoData from "./getNicovideoData";
+
+import type { nicoParam, nicoResponse, NicoVitaUserData, PlaylistContents } from './types';
+
+type getAPITypes = {
+    (url: 'https://api.search.nicovideo.jp/api/v2/snapshot/video/contents/search', param: nicoParam): Promise<nicoResponse>;
+    (url: 'https://cafe.kiite.jp/api/playlists/contents/detail', param: { list_id: string }): Promise<PlaylistContents>
+    (url: 'http://api.ce.nicovideo.jp/api/v1/user.info', param: { user_id: number, __format: 'json' }): Promise<NicoVitaUserData>
+};
 
 type playlistTypes = 'Kiite' | 'niconico';
 type typeParseQueryParam = (url: string, param?: Record<string, number | string | number[] | string[]>) => string;
@@ -38,7 +46,9 @@ const preload = {
         const videoIdsQuery = Object.fromEntries(videoIdsEntries);
         const test = await getAPI('https://api.search.nicovideo.jp/api/v2/snapshot/video/contents/search', { ...stableQuery, ...videoIdsQuery });
         if ('data' in test) return test;
-    }
+    },
+    getAPI,
+    getNicovideoData
 }
 
 contextBridge.exposeInMainWorld('api', preload);
