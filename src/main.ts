@@ -17,8 +17,5 @@ const createWindow = () => {
     mainWindow.loadFile('dist/index.html');
 };
 
-app.whenReady().then(async () => {
-    createWindow();
-});
-
+app.whenReady().then(createWindow);
 app.once('window-all-closed', app.quit);

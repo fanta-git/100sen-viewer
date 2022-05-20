@@ -1,10 +1,8 @@
 import fetch from 'node-fetch';
-import type { nicoParam, nicoResponse, NicoVitaUserData, PlaylistContents } from './types';
+import type { PlaylistContents } from './types';
 
 type getAPITypes = {
-    (url: 'https://api.search.nicovideo.jp/api/v2/snapshot/video/contents/search', param: nicoParam): Promise<nicoResponse>;
     (url: 'https://cafe.kiite.jp/api/playlists/contents/detail', param: { list_id: string }): Promise<PlaylistContents>
-    (url: 'http://api.ce.nicovideo.jp/api/v1/user.info', param: { user_id: number, __format: 'json' }): Promise<NicoVitaUserData>
 };
 
 const getAPI: getAPITypes = async (url, param) => {
