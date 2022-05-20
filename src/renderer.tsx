@@ -1,5 +1,6 @@
 import React from "react";
 import { createRoot } from 'react-dom/client';
+import domtoimage from 'dom-to-image';
 
 import makePlaylistTable from './makePlaylistTable';
 
@@ -17,6 +18,16 @@ const RootDiv: React.FC = () => {
         const result = await window.api.getVideoData(videoIds);
         const playlistTable = makePlaylistTable(result)!;
         setPlaylistTable(playlistTable);
+    }
+
+    const convertPhotoClick = async () => {
+        const songTable = document.getElementById('listdata-table');
+        if (songTable === null) return;
+        const imageUrl = await domtoimage.toJpeg(songTable);
+        const downloadElement = document.createElement('a');
+        downloadElement.href = imageUrl;
+        downloadElement.download = '100sen';
+        downloadElement.click();
     }
 
     return (
