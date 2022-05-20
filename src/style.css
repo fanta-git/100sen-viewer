@@ -12,7 +12,9 @@
 .thumbnail {
     height: 55px;
     width: 100px;
-    object-fit: cover;
+    background-size: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    background-position: center center;
 }
 
 div#listdata-table {

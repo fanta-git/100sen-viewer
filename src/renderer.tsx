@@ -8,11 +8,11 @@ const RootDiv: React.FC = () => {
     const [getPlaylistURL, setPlaylistURL] = React.useState('');
     const [getPlaylistTable, setPlaylistTable] = React.useState(<></>);
 
-    const listUrlClick: React.ChangeEventHandler<HTMLInputElement> = event => {
+    const handleOnChange: React.ChangeEventHandler<HTMLInputElement> = event => {
         setPlaylistURL(event.target.value);
     };
 
-    const loadListClick = async () => {
+    const handleOnClick = async () => {
         const videoIds = await window.api.getListData(getPlaylistURL);
         if (videoIds === undefined) throw Error('URLが間違っています！');
         const result = await window.api.getVideoData(videoIds);
@@ -32,9 +32,8 @@ const RootDiv: React.FC = () => {
 
     return (
         <>
-            <input type="text" onChange={listUrlClick} />
-            <button onClick={loadListClick}>表示</button>
-            <button onClick={convertPhotoClick}>画像化</button>
+            <input type="text" onChange={handleOnChange} />
+            <button onClick={handleOnClick}>表示</button>
             {getPlaylistTable}
         </>
     );
