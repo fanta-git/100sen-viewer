@@ -8,7 +8,7 @@ const makePlaylistTable = (tableDatas: SongDataForTable[]) => {
     for (const videoData of tableDatas) {
         items.push(
             <div className="song" key={items.length}>
-                <img className='thumbnail' src={videoData.thumbnail} />
+                <img className="thumbnail" src={videoData.thumbnail} />
                 <div className="title">{videoData.title}</div>
                 <div className="creator">{videoData.userName}</div>
             </div>

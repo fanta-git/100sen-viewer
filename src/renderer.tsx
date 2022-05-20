@@ -1,6 +1,6 @@
-import html2canvas from "html2canvas";
 import React from "react";
 import { createRoot } from 'react-dom/client';
+import domtoimage from 'dom-to-image';
 
 import makePlaylistTable from './makePlaylistTable';
 
@@ -23,10 +23,10 @@ const RootDiv: React.FC = () => {
     const convertPhotoClick = async () => {
         const songTable = document.getElementById('listdata-table');
         if (songTable === null) return;
-        const canvas = await html2canvas(songTable, { useCORS: true });
+        const imageUrl = await domtoimage.toJpeg(songTable);
         const downloadElement = document.createElement('a');
-        downloadElement.href = canvas.toDataURL('image/png');
-        downloadElement.download = '100sen-png';
+        downloadElement.href = imageUrl;
+        downloadElement.download = '100sen';
         downloadElement.click();
     }
 
