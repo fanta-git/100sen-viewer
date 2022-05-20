@@ -34,7 +34,7 @@ type FailedPlaylistContents = {
 
 export type PlaylistContents = SuccessPlaylistContents | FailedPlaylistContents;
 
-export type SongData = {
+export type KiiteSongData = {
     id: null;
     video_id: string;
     artist_name: string;
@@ -45,4 +45,10 @@ export type SongData = {
     embeddable: true;
     title: string;
     video_thumbnail: string;
+};
+
+export type NicoThumbReturnFormat = {
+    title: string,
+    userName: string,
+    thumbnail: string
 };

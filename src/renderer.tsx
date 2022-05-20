@@ -3,11 +3,7 @@ import ReactDOM from 'react-dom';
 
 import makePlaylistTable from './makePlaylistTable';
 
-type States = {
-    filename: string
-};
-
-const RootDiv: React.FC = prop => {
+const RootDiv: React.FC = () => {
     const [getPlaylistId, setPlaylistId] = React.useState('');
     const [getPlaylistTable, setPlaylistTable] = React.useState(<></>);
 
@@ -16,8 +12,12 @@ const RootDiv: React.FC = prop => {
     };
 
     const handleOnClick = async () => {
-        const result = await window.api.getPlaylistSongs(getPlaylistId);
-        setPlaylistTable(result ? makePlaylistTable({ videoDataList: result })! : <>プレイリストの取得に失敗しました</>);
+        const videoIds = await window.api.getAPI('https://cafe.kiite.jp/api/playlists/contents/detail', { list_id: getPlaylistId });
+        if (videoIds.status === 'failed') throw Error('プレイリストの取得に失敗しました');
+        const listIds = videoIds.songs.map(v => v.video_id);
+        const result = await window.api.getNicovideoData(listIds);
+        const playlistTable = makePlaylistTable(result)!;
+        setPlaylistTable(playlistTable);
     }
 
     return (
