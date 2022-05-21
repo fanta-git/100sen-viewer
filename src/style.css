@@ -48,7 +48,7 @@ div#root {
     overflow: hidden;
 }
 
-.creator {
+.user-name {
     height: 36px;
     font-size: 12px;
     word-break: break-word;
