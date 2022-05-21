@@ -1,7 +1,7 @@
 import { contextBridge } from "electron";
 
-import getListData from './getListData';
-import getVideoData from "./getVideoData";
+import getListData from './apis/getListData';
+import getVideoData from "./apis/getVideoData";
 
 const preload = {
     getListData,

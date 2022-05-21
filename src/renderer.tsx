@@ -5,15 +5,11 @@ import domtoimage from 'dom-to-image';
 import makePlaylistTable from './makePlaylistTable';
 
 const RootDiv: React.FC = () => {
-    const [getPlaylistURL, setPlaylistURL] = React.useState('');
     const [getPlaylistTable, setPlaylistTable] = React.useState(<></>);
-
-    const handleOnChange: React.ChangeEventHandler<HTMLInputElement> = event => {
-        setPlaylistURL(event.target.value);
-    };
-
+    const urlInputBox = React.useRef<HTMLInputElement>(null!);
+    
     const handleOnClick = async () => {
-        const videoIds = await window.api.getListData(getPlaylistURL);
+        const videoIds = await window.api.getListData(urlInputBox.current.value);
         if (videoIds === undefined) throw Error('URLが間違っています！');
         const result = await window.api.getVideoData(videoIds);
         const playlistTable = makePlaylistTable(result)!;
@@ -33,7 +29,7 @@ const RootDiv: React.FC = () => {
     return (
         <>
             <div id="viewer-menu">
-                <input id="url-inputbox" type="text" onChange={handleOnChange} />
+                <input id="url-inputbox" type="text" ref={urlInputBox} />
                 <button id="load-btn" onClick={handleOnClick}>表示</button>
                 <button id="convert-btn" onClick={convertPhotoClick}>画像化</button>
             </div>
