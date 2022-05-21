@@ -20,7 +20,7 @@ const getVideoData = async (videoIds: string[]) => {
             title: resReader('title'),
             userName: resReader('user_nickname'),
             thumbnail: resReader('thumbnail_url')
-        })
+        });
         
         await timer(CALL_API_INTERVAL);
     }

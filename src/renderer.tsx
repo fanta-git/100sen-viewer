@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { createRoot } from 'react-dom/client';
 import domtoimage from 'dom-to-image';
 
@@ -7,14 +7,19 @@ import makePlaylistTable from './makePlaylistTable';
 const RootDiv: React.FC = () => {
     const [playlistCells, setPlaylistCells] = React.useState<JSX.Element[]>([]);
     const urlInputBox = React.useRef<HTMLInputElement>(null!);
+    const textUpdateInputBox = React.useRef<HTMLInputElement>(null);
+    useEffect(() => {
+        console.log('useEffect');
+        textUpdateInputBox.current?.select()
+    }, [textUpdateInputBox.current])
 
     const handleOnClick = async () => {
         const videoIds = await window.api.getListData(urlInputBox.current.value);
         if (videoIds === undefined) throw Error('URLが間違っています！');
         const result = await window.api.getVideoData(videoIds);
-        const playlistTable = makePlaylistTable(result)!;
+        const playlistTable = makePlaylistTable(result, playlistCells, setPlaylistCells, textUpdateInputBox)!;
         setPlaylistCells(playlistTable);
-    }
+    };
 
     const convertPhotoClick = async () => {
         const songTable = document.getElementById('listdata-table');
@@ -24,7 +29,7 @@ const RootDiv: React.FC = () => {
         downloadElement.href = imageUrl;
         downloadElement.download = '100sen';
         downloadElement.click();
-    }
+    };
 
     return (
         <>
