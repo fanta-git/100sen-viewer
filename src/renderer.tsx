@@ -32,9 +32,11 @@ const RootDiv: React.FC = () => {
 
     return (
         <>
-            <input type="text" onChange={handleOnChange} />
-            <button onClick={handleOnClick}>表示</button>
-            <button onClick={convertPhotoClick}>画像化</button>
+            <div id="viewer-menu">
+                <input id="url-inputbox" type="text" onChange={handleOnChange} />
+                <button id="load-btn" onClick={handleOnClick}>表示</button>
+                <button id="convert-btn" onClick={convertPhotoClick}>画像化</button>
+            </div>
             {getPlaylistTable}
         </>
     );
