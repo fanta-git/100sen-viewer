@@ -5,6 +5,7 @@ import { Configuration, DefinePlugin } from 'webpack';
 
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import CopyPlugin from 'copy-webpack-plugin';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -116,6 +117,12 @@ const renderer: Configuration = {
       scriptLoading: 'blocking',
     }),
     new MiniCssExtractPlugin(),
+    new CopyPlugin({
+      patterns: [{
+        from: 'node_modules/electron-prompt/lib/page/',
+        to: 'page/'
+      }]
+    })
   ],
 };
 

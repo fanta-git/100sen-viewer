@@ -1,24 +1,19 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { createRoot } from 'react-dom/client';
 import domtoimage from 'dom-to-image';
 
-import makePlaylistTable from './makePlaylistTable';
+import PlaylistTable from './PlaylistTable';
+import { SongDataForTable } from './types';
 
 const RootDiv: React.FC = () => {
-    const [playlistCells, setPlaylistCells] = React.useState<JSX.Element[]>([]);
+    const [playlistData, setPlaylistData] = React.useState<SongDataForTable[]>([]);
     const urlInputBox = React.useRef<HTMLInputElement>(null!);
-    const textUpdateInputBox = React.useRef<HTMLInputElement>(null);
-    useEffect(() => {
-        console.log('useEffect');
-        textUpdateInputBox.current?.select()
-    }, [textUpdateInputBox.current])
 
     const handleOnClick = async () => {
         const videoIds = await window.api.getListData(urlInputBox.current.value);
         if (videoIds === undefined) throw Error('URLが間違っています！');
         const result = await window.api.getVideoData(videoIds);
-        const playlistTable = makePlaylistTable(result, playlistCells, setPlaylistCells, textUpdateInputBox)!;
-        setPlaylistCells(playlistTable);
+        setPlaylistData(result);
     };
 
     const convertPhotoClick = async () => {
@@ -38,7 +33,7 @@ const RootDiv: React.FC = () => {
                 <button id="load-btn" onClick={handleOnClick}>表示</button>
                 <button id="convert-btn" onClick={convertPhotoClick}>画像化</button>
             </div>
-            <div id="listdata-table">{playlistCells}</div>
+            <PlaylistTable tableData={playlistData}/>
         </>
     );
 }
