@@ -15,9 +15,7 @@ const makePlaylistTable = (tableDatas: SongDataForTable[]) => {
         );
     }
 
-    return (
-        <div id="listdata-table">{items}</div>
-    );
+    return items;
 };
 
 export default makePlaylistTable;

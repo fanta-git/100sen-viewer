@@ -5,15 +5,15 @@ import domtoimage from 'dom-to-image';
 import makePlaylistTable from './makePlaylistTable';
 
 const RootDiv: React.FC = () => {
-    const [getPlaylistTable, setPlaylistTable] = React.useState(<></>);
+    const [playlistCells, setPlaylistCells] = React.useState<JSX.Element[]>([]);
     const urlInputBox = React.useRef<HTMLInputElement>(null!);
-    
+
     const handleOnClick = async () => {
         const videoIds = await window.api.getListData(urlInputBox.current.value);
         if (videoIds === undefined) throw Error('URLが間違っています！');
         const result = await window.api.getVideoData(videoIds);
         const playlistTable = makePlaylistTable(result)!;
-        setPlaylistTable(playlistTable);
+        setPlaylistCells(playlistTable);
     }
 
     const convertPhotoClick = async () => {
@@ -33,7 +33,7 @@ const RootDiv: React.FC = () => {
                 <button id="load-btn" onClick={handleOnClick}>表示</button>
                 <button id="convert-btn" onClick={convertPhotoClick}>画像化</button>
             </div>
-            {getPlaylistTable}
+            <div id="listdata-table">{playlistCells}</div>
         </>
     );
 }

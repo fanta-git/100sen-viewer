@@ -15,11 +15,16 @@ div#root {
 
 #listdata-table {
     background-color: white;
+    width: fit-content;
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     border-width: 2px 0 0 2px;
     border-style: solid;
     border-color: black;
+}
+
+#listdata-table:empty {
+    display: none;
 }
 
 .song {
