@@ -3,6 +3,8 @@ import { app, BrowserWindow } from 'electron';
 
 const createWindow = () => {
     const mainWindow = new BrowserWindow({
+        width: 1054,
+        height: 740,
         webPreferences: {
             nodeIntegration: false,
             contextIsolation: true,

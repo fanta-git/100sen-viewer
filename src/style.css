@@ -1,6 +1,32 @@
+div#root {
+    width: 1022px;
+    margin: auto;
+}
+
+#viewer-menu {
+    border: 1px solid black;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+#url-inputbox {
+    width: 320px;
+}
+
+#listdata-table {
+    background-color: white;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    border-width: 2px 0 0 2px;
+    border-style: solid;
+    border-color: black;
+}
+
 .song {
     width: 100px;
-    font-size: 12px;
+    border-width: 0 2px 2px 0;
+    border-style: solid;
+    border-color: black;
 }
 
 .thumbnail {
@@ -9,7 +35,17 @@
     object-fit: cover;
 }
 
-div#listdata-table {
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
+.title {
+    border-bottom: 1px dashed black;
+    height: 64px;
+    font-size: 14px;
+    word-break: break-word;
+    overflow: hidden;
+}
+
+.creator {
+    height: 36px;
+    font-size: 12px;
+    word-break: break-word;
+    overflow: hidden;
 }
