@@ -1,10 +1,15 @@
 #listdata-table {
     background-color: white;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    width: 1010px;
+    height: auto;
 }
 
 .song {
     width: 100px;
-    font-size: 12px;
     border-right: 1px solid black;
     border-bottom: 1px solid black;
 }
@@ -15,11 +20,17 @@
     object-fit: cover;
 }
 
-div#listdata-table {
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    border-top: 1px solid black;
-    border-left: 1px solid black;
-    width: 1010px;
-    height: auto;
+.title {
+    border-bottom: 1px dashed black;
+    height: 64px;
+    font-size: 14px;
+    word-break: break-word;
+    overflow: hidden;
+}
+
+.creator {
+    height: 36px;
+    font-size: 12px;
+    word-break: break-word;
+    overflow: hidden;
 }
