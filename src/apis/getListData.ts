@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import type { PlaylistContents } from './types';
+import type { PlaylistContents } from '../types';
 
 type getAPITypes =  (listId: string) => Promise<string[]>;
 

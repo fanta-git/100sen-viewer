@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { SongDataForTable } from './types';
+import { SongDataForTable } from '../types';
 
 
 const CALL_API_INTERVAL = 10;
@@ -20,7 +20,7 @@ const getVideoData = async (videoIds: string[]) => {
             title: resReader('title'),
             userName: resReader('user_nickname'),
             thumbnail: resReader('thumbnail_url')
-        })
+        });
         
         await timer(CALL_API_INTERVAL);
     }
