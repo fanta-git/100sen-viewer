@@ -7,6 +7,7 @@ type Props = {
     tableData: SongDataForTable[]
 }
 
+const TYPE_JP = { title: 'タイトル', userName: '投稿者名' };
 const toCamelCase = (str: string) => {
     return str.split('-').map((word, index) => index
         ? word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
@@ -18,10 +19,11 @@ const PlaylistTable: React.FC<Props> = ({ tableData }) => {
     const items: React.ReactElement[] = [];
     const updateContent: React.MouseEventHandler<HTMLDivElement> = async (event) => {
         const elm = event.currentTarget;
-        const fullContent = elm.parentElement!.dataset[toCamelCase(elm.className)];
+        const type = toCamelCase(elm.classList[0]) as keyof typeof TYPE_JP;
+        const fullContent = elm.parentElement!.dataset[type];
         const newContent = await window.api.electronPrompt({
-            title: 'title',
-            label: 'label',
+            title: TYPE_JP[type] + 'を変更',
+            label: '変更後の' + TYPE_JP[type],
             value: fullContent
         });
         if (newContent !== null) elm.textContent = newContent;

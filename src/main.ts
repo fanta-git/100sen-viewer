@@ -18,6 +18,7 @@ const createWindow = () => {
     }
 
     mainWindow.loadFile('dist/index.html');
+    mainWindow.once('closed', app.quit);
 };
 
 ipcMain.handle('electronPrompt', (event: Electron.IpcMainInvokeEvent, ...args: Parameters<typeof electronPrompt>) => {
@@ -25,4 +26,3 @@ ipcMain.handle('electronPrompt', (event: Electron.IpcMainInvokeEvent, ...args: P
 });
 
 app.whenReady().then(createWindow);
-app.once('window-all-closed', app.quit);
