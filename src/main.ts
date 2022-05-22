@@ -1,6 +1,6 @@
 import path from 'path';
 import { app, BrowserWindow, ipcMain } from 'electron';
-import electronPrompt from 'electron-prompt';
+import ipcMainHandle from './ipcHandle';
 
 const createWindow = () => {
     const mainWindow = new BrowserWindow({
@@ -21,8 +21,6 @@ const createWindow = () => {
     mainWindow.once('closed', app.quit);
 };
 
-ipcMain.handle('electronPrompt', (event: Electron.IpcMainInvokeEvent, ...args: Parameters<typeof electronPrompt>) => {
-    return electronPrompt(...args);
-});
+ipcMainHandle();
 
 app.whenReady().then(createWindow);

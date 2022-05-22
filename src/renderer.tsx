@@ -10,7 +10,7 @@ const RootDiv: React.FC = () => {
 
     return (
         <>
-            <ViewerMenu setPlaylistData={setPlaylistData} />
+            <ViewerMenu playlistData={playlistData} setPlaylistData={setPlaylistData} />
             <PlaylistTable tableData={playlistData} />
         </>
     );

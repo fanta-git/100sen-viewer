@@ -3,6 +3,7 @@ import { SongDataForTable } from "./types";
 import domtoimage from 'dom-to-image';
 
 type Props = {
+    playlistData: SongDataForTable[],
     setPlaylistData: React.Dispatch<React.SetStateAction<SongDataForTable[]>>
 };
 
@@ -21,14 +22,21 @@ const ViewerMenu: React.FC<Props> = props => {
         const songTable = document.getElementById('listdata-table');
         if (songTable === null) return;
         const imageUrl = await domtoimage.toJpeg(songTable);
-        const downloadElement = document.createElement('a');
-        downloadElement.href = imageUrl;
-        downloadElement.download = '100sen';
-        downloadElement.click();
+        saveFile(imageUrl, '100sen');
     };
 
     const outputCsv = async () => {
+        const outputData = await window.api.csvStringifySync(props.playlistData);
+        const blob = new Blob([outputData], { type: 'text/csv' });
+        const uri = URL.createObjectURL(blob);
+        saveFile(uri, '100sen_data');
+    };
 
+    const saveFile = (dataUrl: string, fileName: string) => {
+        const downloadElement = document.createElement('a');
+        downloadElement.href = dataUrl;
+        downloadElement.download = fileName;
+        downloadElement.click();
     };
 
     return (
