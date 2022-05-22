@@ -7,6 +7,7 @@ type Props = {
     setPlaylistData: React.Dispatch<React.SetStateAction<SongDataForTable[]>>
 };
 
+const isKey = <U extends Object>(key: string | number | symbol, obj: U): key is keyof typeof obj => key in obj;
 const isSongDataForTable = (data: Record<string, string>[]): data is SongDataForTable[] => {
     const keys: (keyof SongDataForTable)[] = ['title', 'userName', 'thumbnail'];
     return data.every(v => keys.every(k => k in v));
@@ -63,6 +64,10 @@ const ViewerMenu: React.FC<Props> = props => {
 
     const updateRadio: React.ChangeEventHandler = event => {
         radioSelectedRef.current = event.target.id;
+        const inputs = [urlInputRef, csvInputRef];
+        for (const { current } of inputs) {
+            current.disabled = !current.id.startsWith(event.target.id);
+        }
     };
 
     return (
@@ -70,11 +75,11 @@ const ViewerMenu: React.FC<Props> = props => {
             <div id="from-wrapper">
                 <div className="from-item-wrapper">
                     <label><input type="radio" name="from" id="from-url" onChange={updateRadio} defaultChecked />URLから読み込み</label>
-                    <input type="text" id="url-inputbox" ref={urlInputRef} />
+                    <input type="text" id="from-url-inputbox" ref={urlInputRef} />
                 </div>
                 <div className="from-item-wrapper">
                     <label><input type="radio" name="from" id="form-csv" onChange={updateRadio} />CSVから読み込み</label>
-                    <input type="file" id="csv-filebox" accept=".csv" ref={csvInputRef} />
+                    <input type="file" id="form-csv-filebox" accept=".csv" ref={csvInputRef} disabled/>
                 </div>
                 <div className="from-load">
                     <button id="load-btn" onClick={loadPlaylist}>表示</button>
