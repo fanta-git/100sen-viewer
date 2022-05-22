@@ -26,7 +26,7 @@ const ViewerMenu: React.FC<Props> = props => {
     };
 
     const outputCsv = async () => {
-        const outputData = await window.api.csvStringifySync(props.playlistData);
+        const outputData = await window.api.csvStringifySync(props.playlistData, { header: true, quoted: true });
         const blob = new Blob([outputData], { type: 'text/csv' });
         const uri = URL.createObjectURL(blob);
         saveFile(uri, '100sen_data');
@@ -43,12 +43,12 @@ const ViewerMenu: React.FC<Props> = props => {
         <div id="viewer-menu">
             <div id="from-wrapper">
                 <div className="from-item-wrapper">
-                    <label><input type="radio" id="fromUrl" defaultChecked />URLから読み込み</label>
+                    <label><input type="radio" name="from" id="fromUrl" defaultChecked />URLから読み込み</label>
                     <input type="text" id="url-inputbox" ref={urlInputRef} />
                 </div>
                 <div className="from-item-wrapper">
-                    <label><input type="radio" id="fromCSV" />CSVから読み込み</label>
-                    <input type="file" id="csv-filebox" ref={csvInputRef} />
+                    <label><input type="radio" name="from" id="fromCSV" />CSVから読み込み</label>
+                    <input type="file" id="csv-filebox" accept=".csv" ref={csvInputRef} />
                 </div>
                 <div className="from-load">
                     <button id="load-btn" onClick={loadPlaylist}>表示</button>

@@ -1,5 +1,7 @@
-import ipcMainInvoke from "../ipcInvoke";
+import { ipcRenderer } from "electron";
+import type electronPromptT from 'electron-prompt';
 
-const electronPrompt = ipcMainInvoke('electronPrompt');
+type funcT = (...args: Parameters<typeof electronPromptT>) => Promise<string>;
+const electronPrompt: funcT = (...args) => ipcRenderer.invoke('electronPrompt', ...args);
 
 export default electronPrompt;

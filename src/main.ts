@@ -1,6 +1,7 @@
 import path from 'path';
 import { app, BrowserWindow, ipcMain } from 'electron';
-import ipcMainHandle from './ipcHandle';
+import electronPrompt from 'electron-prompt';
+import { stringifier, stringify } from 'csv';
 
 const createWindow = () => {
     const mainWindow = new BrowserWindow({
@@ -21,6 +22,14 @@ const createWindow = () => {
     mainWindow.once('closed', app.quit);
 };
 
-ipcMainHandle();
+ipcMain.handle('electronPrompt', (event, ...args: Parameters<typeof electronPrompt>) => electronPrompt(...args));
+
+ipcMain.handle('csvStringifySync', (event, input: stringifier.Input, option: stringifier.Options) => new Promise<string>(
+    resolve => stringify(
+        input,
+        option,
+        (err, output) => resolve(output)
+    )
+));
 
 app.whenReady().then(createWindow);

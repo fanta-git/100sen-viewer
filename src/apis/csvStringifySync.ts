@@ -1,13 +1,7 @@
-import ipcMainInvoke from "../ipcInvoke";
+import { stringifier } from "csv";
+import { ipcRenderer } from "electron";
 
-const csvStringifySync = ipcMainInvoke('csvStringifySync');
-// const csvStringifySync = (input: Parameters<typeof csvStringify>[0]) => new Promise<string>(resolve => csvStringify(
-//     input,
-//     {
-//         header: true,
-//         quoted: true,
-//     },
-//     (err, output) => resolve(output)
-// ));
+type funcT = (input: stringifier.Input, option: stringifier.Options) => Promise<string>;
+const csvStringifySync: funcT = (input, option) => ipcRenderer.invoke('csvStringifySync', input, option);
 
 export default csvStringifySync;
