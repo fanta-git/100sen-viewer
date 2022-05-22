@@ -7,15 +7,37 @@ type Props = {
     setPlaylistData: React.Dispatch<React.SetStateAction<SongDataForTable[]>>
 };
 
+const isSongDataForTable = (data: Record<string, string>[]): data is SongDataForTable[] => {
+    const keys: (keyof SongDataForTable)[] = ['title', 'userName', 'thumbnail'];
+    return data.every(v => keys.every(k => k in v));
+}
+
 const ViewerMenu: React.FC<Props> = props => {
     const urlInputRef = React.useRef<HTMLInputElement>(null!);
     const csvInputRef = React.useRef<HTMLInputElement>(null!);
+    const radioSelectedRef = React.useRef<string>('from-url');
 
     const loadPlaylist = async () => {
-        const videoIds = await window.api.getListData(urlInputRef.current.value);
-        if (videoIds === undefined) throw Error('URLが間違っています！');
-        const result = await window.api.getVideoData(videoIds);
-        props.setPlaylistData(result);
+        switch (radioSelectedRef.current) {
+            case 'from-url': {
+                const videoIds = await window.api.getListData(urlInputRef.current.value);
+                if (videoIds === undefined) throw Error('URLが間違っています！');
+                const result = await window.api.getVideoData(videoIds);
+                props.setPlaylistData(result);
+                break;
+            }
+            case 'form-csv': {
+                const filePaths = csvInputRef.current.files;
+                if (filePaths === null) return;
+                for (const { path } of filePaths) {
+                    const data = await window.api.csvParseSync(path, { columns: true });
+                    if (!isSongDataForTable(data)) return;
+                    props.setPlaylistData(data);
+                }
+                break;
+            }
+        }
+        
     };
 
     const outputJpeg = async () => {
@@ -39,15 +61,19 @@ const ViewerMenu: React.FC<Props> = props => {
         downloadElement.click();
     };
 
+    const updateRadio: React.ChangeEventHandler = event => {
+        radioSelectedRef.current = event.target.id;
+    };
+
     return (
         <div id="viewer-menu">
             <div id="from-wrapper">
                 <div className="from-item-wrapper">
-                    <label><input type="radio" name="from" id="fromUrl" defaultChecked />URLから読み込み</label>
+                    <label><input type="radio" name="from" id="from-url" onChange={updateRadio} defaultChecked />URLから読み込み</label>
                     <input type="text" id="url-inputbox" ref={urlInputRef} />
                 </div>
                 <div className="from-item-wrapper">
-                    <label><input type="radio" name="from" id="fromCSV" />CSVから読み込み</label>
+                    <label><input type="radio" name="from" id="form-csv" onChange={updateRadio} />CSVから読み込み</label>
                     <input type="file" id="csv-filebox" accept=".csv" ref={csvInputRef} />
                 </div>
                 <div className="from-load">
