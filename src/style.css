@@ -54,3 +54,16 @@ div#root {
     word-break: break-word;
     overflow: hidden;
 }
+
+div#viewer-menu {
+    display: grid;
+    grid-template-columns: 520px 1fr 180px;
+}
+
+div#from-wrapper {
+    grid-column: 1 / 2;
+}
+
+.to-wrapper {
+    grid-column: 3 / 4;
+}

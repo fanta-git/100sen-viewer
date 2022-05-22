@@ -4,10 +4,12 @@ import domtoimage from 'dom-to-image';
 
 import PlaylistTable from './PlaylistTable';
 import { SongDataForTable } from './types';
+import ViewerMenu from "./ViewerMenu";
 
 const RootDiv: React.FC = () => {
     const [playlistData, setPlaylistData] = React.useState<SongDataForTable[]>([]);
     const urlInputBox = React.useRef<HTMLInputElement>(null!);
+    const csvInpurBox = React.useRef<HTMLInputElement>(null!);
 
     const handleOnClick = async () => {
         const videoIds = await window.api.getListData(urlInputBox.current.value);
@@ -28,11 +30,12 @@ const RootDiv: React.FC = () => {
 
     return (
         <>
-            <div id="viewer-menu">
-                <input id="url-inputbox" type="text" ref={urlInputBox} />
-                <button id="load-btn" onClick={handleOnClick}>表示</button>
-                <button id="convert-btn" onClick={convertPhotoClick}>画像化</button>
-            </div>
+            <ViewerMenu
+                urlInputRef={urlInputBox}
+                csvInputRef={csvInpurBox}
+                loadList={handleOnClick}
+                outputJpeg={convertPhotoClick}
+            />
             <PlaylistTable tableData={playlistData}/>
         </>
     );
