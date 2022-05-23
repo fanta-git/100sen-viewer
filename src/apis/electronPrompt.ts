@@ -1,9 +1,7 @@
 import { ipcRenderer } from "electron";
-import type electronPrpmptT from 'electron-prompt';
+import type electronPromptT from 'electron-prompt';
 
-const electronPrompt = async (options?: electronPrpmptT.Options) => {
-    const result = await ipcRenderer.invoke('electronPrompt', options) as string | null;
-    return result;
-};
+type funcT = (...args: Parameters<typeof electronPromptT>) => Promise<string>;
+const electronPrompt: funcT = (...args) => ipcRenderer.invoke('electronPrompt', ...args);
 
 export default electronPrompt;

@@ -47,8 +47,13 @@ export type KiiteSongData = {
     video_thumbnail: string;
 };
 
-export type SongDataForTable = {
+export type originalData = {
     title: string,
     userName: string,
     thumbnail: string
 };
+
+export type SongDataForTable = originalData & {
+    key: number,
+    original: originalData
+}
