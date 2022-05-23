@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { SongDataForTable } from '../types';
+import { originalData, SongDataForTable } from '../types';
 
 
 const CALL_API_INTERVAL = 10;
@@ -14,7 +14,7 @@ const getVideoData = async (videoId: string) => {
     const resText = await response.text();
     const resXml = new DOMParser().parseFromString(resText, 'text/xml');
     const resReader = XMLReader(resXml);
-    const ret = {
+    const ret: originalData = {
         title: resReader('title'),
         userName: resReader('user_nickname'),
         thumbnail: resReader('thumbnail_url')

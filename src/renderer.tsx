@@ -4,14 +4,15 @@ import { createRoot } from 'react-dom/client';
 import PlaylistTable from './PlaylistTable';
 import { SongDataForTable } from './types';
 import ViewerMenu from "./ViewerMenu";
+import PlaylistDataManager from './PlaylistDataManager';
 
 const RootDiv: React.FC = () => {
-    const [playlistData, setPlaylistData] = React.useState<SongDataForTable[]>([]);
+    const listManager = new PlaylistDataManager();
 
     return (
         <>
-            <ViewerMenu playlistData={playlistData} setPlaylistData={setPlaylistData} />
-            <PlaylistTable tableData={playlistData} setTableData={setPlaylistData} />
+            <ViewerMenu playlistManager={listManager} />
+            <PlaylistTable playlistManager={listManager} />
         </>
     );
 }

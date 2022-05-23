@@ -1,14 +1,13 @@
 import React from "react";
-import { SongDataForTable } from "./types";
+import { originalData, PlaylistContents, SongDataForTable } from "./types";
 import domtoimage from 'dom-to-image';
+import PlaylistDataManager from './PlaylistDataManager';
 
 type Props = {
-    playlistData: SongDataForTable[],
-    setPlaylistData: React.Dispatch<React.SetStateAction<SongDataForTable[]>>
+    playlistManager: PlaylistDataManager
 };
 
-const isKey = <U extends Object>(key: string | number | symbol, obj: U): key is keyof typeof obj => key in obj;
-const isSongDataForTable = (data: Record<string, string>[]): data is SongDataForTable[] => {
+const isOriginalData = (data: Record<string, string>[]): data is originalData[] => {
     const keys: (keyof SongDataForTable)[] = ['title', 'userName', 'thumbnail'];
     return data.every(v => keys.every(k => k in v));
 }
@@ -25,11 +24,11 @@ const ViewerMenu: React.FC<Props> = props => {
                 if (videoIds === undefined) throw Error('URLが間違っています！');
                 const result = [];
                 for (const videoId of videoIds) {
-                    const a = await window.api.getVideoData(videoId);
-                    if (a === undefined) continue;
-                    result.push(a);
-                    props.setPlaylistData([...result]);
+                    const apiResult = await window.api.getVideoData(videoId);
+                    if (apiResult === undefined) continue;
+                    result.push(apiResult);
                 }
+                props.playlistManager.setList([...result]);
                 break;
             }
             case 'form-csv': {
@@ -37,8 +36,8 @@ const ViewerMenu: React.FC<Props> = props => {
                 if (filePaths === null) return;
                 for (const { path } of filePaths) {
                     const data = await window.api.csvParseSync(path, { columns: true });
-                    if (!isSongDataForTable(data)) return;
-                    props.setPlaylistData(data);
+                    if (!isOriginalData(data)) return;
+                    props.playlistManager.setList(data);
                 }
                 break;
             }
@@ -54,7 +53,7 @@ const ViewerMenu: React.FC<Props> = props => {
     };
 
     const outputCsv = async () => {
-        const outputData = await window.api.csvStringifySync(props.playlistData, { header: true, quoted: true });
+        const outputData = await window.api.csvStringifySync(props.playlistManager.playlist, { header: true, quoted: true });
         const blob = new Blob([outputData], { type: 'text/csv' });
         const uri = URL.createObjectURL(blob);
         saveFile(uri, '100sen_data');
