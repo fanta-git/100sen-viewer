@@ -12,20 +12,24 @@ const isOriginalData = (data: Record<string, string>[]): data is originalData[] 
     return data.every(v => keys.every(k => k in v));
 }
 
-const ViewerMenu: React.FC<Props> = props => {
+const ViewerMenu: React.FC<Props> = ({ playlistManager }) => {
     const urlInputRef = React.useRef<HTMLInputElement>(null!);
     const csvInputRef = React.useRef<HTMLInputElement>(null!);
     const radioSelectedRef = React.useRef<string>('from-url');
 
+    const [isloadbtnDisabled, setIsLoadbtnDisabled] = React.useState(false);
+
     const loadPlaylist = async () => {
+        setIsLoadbtnDisabled(true);
         switch (radioSelectedRef.current) {
             case 'from-url': {
                 const videoIds = await window.api.getListData(urlInputRef.current.value);
                 if (videoIds === undefined) throw Error('URLが間違っています！');
+                playlistManager.clear();
                 for (const videoId of videoIds) {
                     const songData = await window.api.getVideoData(videoId);
                     if (songData === undefined) continue;
-                    props.playlistManager.add(songData);
+                    playlistManager.add(songData);
                 }
                 break;
             }
@@ -35,12 +39,12 @@ const ViewerMenu: React.FC<Props> = props => {
                 for (const { path } of filePaths) {
                     const csvData = await window.api.csvParseSync(path, { columns: true });
                     if (!isOriginalData(csvData)) return;
-                    for (const songData of csvData) props.playlistManager.add(songData);
+                    for (const songData of csvData) playlistManager.add(songData);
                 }
                 break;
             }
         }
-        
+        setIsLoadbtnDisabled(false);
     };
 
     const outputJpeg = async () => {
@@ -51,7 +55,7 @@ const ViewerMenu: React.FC<Props> = props => {
     };
 
     const outputCsv = async () => {
-        const outputData = await window.api.csvStringifySync(props.playlistManager.playlist, { header: true, quoted: true });
+        const outputData = await window.api.csvStringifySync(playlistManager.playlist, { header: true, quoted: true });
         const blob = new Blob([outputData], { type: 'text/csv' });
         const uri = URL.createObjectURL(blob);
         saveFile(uri, '100sen_data');
@@ -69,10 +73,6 @@ const ViewerMenu: React.FC<Props> = props => {
         const inputs = [urlInputRef, csvInputRef];
         for (const { current } of inputs) current.disabled = !current.id.startsWith(event.target.id);
     };
-
-    const trimTitle = () => {
-        props.playlistManager.trimTitle();
-    };
     
     return (
         <div id="viewer-menu">
@@ -86,12 +86,12 @@ const ViewerMenu: React.FC<Props> = props => {
                     <input type="file" id="form-csv-filebox" accept=".csv" ref={csvInputRef} disabled/>
                 </div>
                 <div className="from-load">
-                    <button id="load-btn" onClick={loadPlaylist}>表示</button>
+                    <button id="load-btn" onClick={loadPlaylist} disabled={isloadbtnDisabled}>表示</button>
                 </div>
             </div>
             <div className="edit-wrapper">
                 <div className="edit-item-wrapper">
-                    <button id="trim-title-btn" onClick={trimTitle}>タイトルの自動抜き出し</button>
+                    <button id="trim-title-btn" onClick={() => playlistManager.trimTitle()}>タイトルの自動抜き出し</button>
                 </div>
             </div>
             <div className="to-wrapper">

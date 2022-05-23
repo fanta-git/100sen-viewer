@@ -11,7 +11,7 @@ const TYPE_JP = { title: 'タイトル', userName: '投稿者名' };
 
 const PlaylistTable: React.FC<Props> = ({ playlistManager }) => {
     const items: React.ReactElement[] = [];
-    for (const [i, videoData] of Object.entries(playlistManager.playlist)) {
+    for (const videoData of playlistManager.playlist) {
         const updateContent = async (key: number, type: keyof typeof TYPE_JP) => {
             const newContent = await window.api.electronPrompt({
                 title: TYPE_JP[type] + 'を変更',
