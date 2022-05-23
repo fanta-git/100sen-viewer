@@ -6,9 +6,26 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run build && npm run serve",
-    "build": "cross-env NODE_ENV=\"development\" webpack --progress",
+    "compile": "cross-env NODE_ENV=\"development\" webpack --progress",
+    "build": "rm -rf dist/ && cross-env webpack --progress && electron-builder -wm",
     "serve": "electron .",
     "watch": "cross-env NODE_ENV=\"development\" webpack --progress --watch"
+  },
+  "build": {
+    "appId": "com.electron.100sen-viewer",
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": "dmg",
+      "icon": "image/icon.icns"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.png"
+    },
+    "files": [
+      "dist/**/*",
+      "package.json"
+    ]
   },
   "keywords": [],
   "author": "fanta",
@@ -24,6 +41,8 @@
     "cross-env": "^7.0.3",
     "css-loader": "^6.7.1",
     "electron": "^18.2.3",
+    "electron-builder": "^23.0.3",
+    "electron-packager": "^15.5.1",
     "electron-reload": "^2.0.0-alpha.1",
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.6.0",
