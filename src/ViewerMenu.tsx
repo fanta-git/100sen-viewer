@@ -1,5 +1,5 @@
 import React from "react";
-import { originalData, PlaylistContents, SongDataForTable } from "./types";
+import { originalData, SongDataForTable } from "./types";
 import domtoimage from 'dom-to-image';
 import PlaylistDataManager from './PlaylistDataManager';
 
@@ -24,7 +24,10 @@ const ViewerMenu: React.FC<Props> = ({ playlistManager }) => {
         switch (radioSelectedRef.current) {
             case 'from-url': {
                 const videoIds = await window.api.getListData(urlInputRef.current.value);
-                if (videoIds === undefined) throw Error('URLが間違っています！');
+                if (videoIds === undefined) {
+                    setIsLoadbtnDisabled(false);
+                    throw Error('URLが間違っています！');
+                }
                 playlistManager.clear();
                 for (const videoId of videoIds) {
                     const songData = await window.api.getVideoData(videoId);
