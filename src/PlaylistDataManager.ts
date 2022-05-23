@@ -11,6 +11,10 @@ class PlaylistDataManager {
         this.key = 0;
     }
 
+    clear () {
+        this.setPlaylist([]);
+    }
+
     add (songData: originalData) {
         this.setPlaylist(list => [
             ...list,
