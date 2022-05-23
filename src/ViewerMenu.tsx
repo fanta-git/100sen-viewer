@@ -23,8 +23,13 @@ const ViewerMenu: React.FC<Props> = props => {
             case 'from-url': {
                 const videoIds = await window.api.getListData(urlInputRef.current.value);
                 if (videoIds === undefined) throw Error('URLが間違っています！');
-                const result = await window.api.getVideoData(videoIds);
-                props.setPlaylistData(result);
+                const result = [];
+                for (const videoId of videoIds) {
+                    const a = await window.api.getVideoData(videoId);
+                    if (a === undefined) continue;
+                    result.push(a);
+                    props.setPlaylistData([...result]);
+                }
                 break;
             }
             case 'form-csv': {
@@ -65,9 +70,7 @@ const ViewerMenu: React.FC<Props> = props => {
     const updateRadio: React.ChangeEventHandler = event => {
         radioSelectedRef.current = event.target.id;
         const inputs = [urlInputRef, csvInputRef];
-        for (const { current } of inputs) {
-            current.disabled = !current.id.startsWith(event.target.id);
-        }
+        for (const { current } of inputs) current.disabled = !current.id.startsWith(event.target.id);
     };
 
     return (

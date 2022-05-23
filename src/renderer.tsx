@@ -11,7 +11,7 @@ const RootDiv: React.FC = () => {
     return (
         <>
             <ViewerMenu playlistData={playlistData} setPlaylistData={setPlaylistData} />
-            <PlaylistTable tableData={playlistData} />
+            <PlaylistTable tableData={playlistData} setTableData={setPlaylistData} />
         </>
     );
 }
