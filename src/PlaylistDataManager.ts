@@ -14,10 +14,11 @@ class PlaylistDataManager {
     setList (playlistData: originalData[]) {
         const res = [];
         for (const playlist of playlistData){
-            const songData: SongDataForTable = Object.assign({}, playlist, {
+            const songData: SongDataForTable = {
+                ...playlist,
                 key: this.key,
-                original: Object.assign({}, playlist)
-            });
+                original: { ...playlist }
+            };
             res.push(songData);
             this.key++;
         }
@@ -25,10 +26,28 @@ class PlaylistDataManager {
     }
 
     overWrite (key: number, data: Partial<originalData>) {
-        const targetIndex = this.playlist.findIndex(v => v.key === key);
+        this.setPlaylist(list => {
+            const newlist = [...list];
+            const targetIndex = newlist.findIndex(v => v.key === key);
+            newlist[targetIndex] = { ...newlist[targetIndex], ...data };
+            return newlist;
+        });
+    }
+
+    trimTitle () {
         const newData = [...this.playlist];
-        newData[targetIndex] = Object.assign({}, this.playlist[targetIndex], data);
-        this.setPlaylist(newData);
+        const regs: RegExp[] = [
+            /【.*?】|\[.*?\]/g,
+            /.*(「|｢|『)/,
+            /(」|｣|』).*/,
+            /(\/|／).*/,
+            /.*-/,
+            /(feat|ft) ?\..*/,
+        ];
+        for (const item of newData) {
+            const trimedTitle = regs.reduce((tit, reg) => tit.replace(reg, ''), item.title).trim();
+            this.overWrite(item.key, { title: trimedTitle });
+        }
     }
 
     update () {

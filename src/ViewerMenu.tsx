@@ -72,6 +72,10 @@ const ViewerMenu: React.FC<Props> = props => {
         for (const { current } of inputs) current.disabled = !current.id.startsWith(event.target.id);
     };
 
+    const trimTitle = () => {
+        props.playlistManager.trimTitle();
+    };
+    
     return (
         <div id="viewer-menu">
             <div id="from-wrapper">
@@ -85,6 +89,11 @@ const ViewerMenu: React.FC<Props> = props => {
                 </div>
                 <div className="from-load">
                     <button id="load-btn" onClick={loadPlaylist}>表示</button>
+                </div>
+            </div>
+            <div className="edit-wrapper">
+                <div className="edit-item-wrapper">
+                    <button id="trim-title-btn" onClick={trimTitle}>タイトルの自動抜き出し</button>
                 </div>
             </div>
             <div className="to-wrapper">

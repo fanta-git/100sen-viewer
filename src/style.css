@@ -40,19 +40,24 @@ div#root {
     object-fit: cover;
 }
 
+.title, .user-name {
+    word-break: break-word;
+    overflow: hidden;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
 .title {
     border-bottom: 1px dashed black;
     height: 64px;
     font-size: 14px;
-    word-break: break-word;
-    overflow: hidden;
 }
 
 .user-name {
     height: 36px;
     font-size: 12px;
-    word-break: break-word;
-    overflow: hidden;
 }
 
 div#viewer-menu {

@@ -2,7 +2,6 @@ import React from "react";
 import { createRoot } from 'react-dom/client';
 
 import PlaylistTable from './PlaylistTable';
-import { SongDataForTable } from './types';
 import ViewerMenu from "./ViewerMenu";
 import PlaylistDataManager from './PlaylistDataManager';
 
