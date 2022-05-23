@@ -22,22 +22,20 @@ const ViewerMenu: React.FC<Props> = props => {
             case 'from-url': {
                 const videoIds = await window.api.getListData(urlInputRef.current.value);
                 if (videoIds === undefined) throw Error('URLが間違っています！');
-                const result = [];
                 for (const videoId of videoIds) {
-                    const apiResult = await window.api.getVideoData(videoId);
-                    if (apiResult === undefined) continue;
-                    result.push(apiResult);
+                    const songData = await window.api.getVideoData(videoId);
+                    if (songData === undefined) continue;
+                    props.playlistManager.add(songData);
                 }
-                props.playlistManager.setList([...result]);
                 break;
             }
             case 'form-csv': {
                 const filePaths = csvInputRef.current.files;
                 if (filePaths === null) return;
                 for (const { path } of filePaths) {
-                    const data = await window.api.csvParseSync(path, { columns: true });
-                    if (!isOriginalData(data)) return;
-                    props.playlistManager.setList(data);
+                    const csvData = await window.api.csvParseSync(path, { columns: true });
+                    if (!isOriginalData(csvData)) return;
+                    for (const songData of csvData) props.playlistManager.add(songData);
                 }
                 break;
             }
@@ -72,6 +70,10 @@ const ViewerMenu: React.FC<Props> = props => {
         for (const { current } of inputs) current.disabled = !current.id.startsWith(event.target.id);
     };
 
+    const trimTitle = () => {
+        props.playlistManager.trimTitle();
+    };
+    
     return (
         <div id="viewer-menu">
             <div id="from-wrapper">
@@ -85,6 +87,11 @@ const ViewerMenu: React.FC<Props> = props => {
                 </div>
                 <div className="from-load">
                     <button id="load-btn" onClick={loadPlaylist}>表示</button>
+                </div>
+            </div>
+            <div className="edit-wrapper">
+                <div className="edit-item-wrapper">
+                    <button id="trim-title-btn" onClick={trimTitle}>タイトルの自動抜き出し</button>
                 </div>
             </div>
             <div className="to-wrapper">
