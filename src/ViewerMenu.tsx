@@ -22,22 +22,20 @@ const ViewerMenu: React.FC<Props> = props => {
             case 'from-url': {
                 const videoIds = await window.api.getListData(urlInputRef.current.value);
                 if (videoIds === undefined) throw Error('URLが間違っています！');
-                const result = [];
                 for (const videoId of videoIds) {
-                    const apiResult = await window.api.getVideoData(videoId);
-                    if (apiResult === undefined) continue;
-                    result.push(apiResult);
+                    const songData = await window.api.getVideoData(videoId);
+                    if (songData === undefined) continue;
+                    props.playlistManager.add(songData);
                 }
-                props.playlistManager.setList([...result]);
                 break;
             }
             case 'form-csv': {
                 const filePaths = csvInputRef.current.files;
                 if (filePaths === null) return;
                 for (const { path } of filePaths) {
-                    const data = await window.api.csvParseSync(path, { columns: true });
-                    if (!isOriginalData(data)) return;
-                    props.playlistManager.setList(data);
+                    const csvData = await window.api.csvParseSync(path, { columns: true });
+                    if (!isOriginalData(csvData)) return;
+                    for (const songData of csvData) props.playlistManager.add(songData);
                 }
                 break;
             }

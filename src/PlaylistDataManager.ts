@@ -11,18 +11,16 @@ class PlaylistDataManager {
         this.key = 0;
     }
 
-    setList (playlistData: originalData[]) {
-        const res = [];
-        for (const playlist of playlistData){
-            const songData: SongDataForTable = {
-                ...playlist,
+    add (songData: originalData) {
+        this.setPlaylist(list => [
+            ...list,
+            {
+                ...songData,
                 key: this.key,
-                original: { ...playlist }
-            };
-            res.push(songData);
-            this.key++;
-        }
-        this.setPlaylist(res);
+                original: { ...songData }
+            }
+        ]);
+        this.key++;
     }
 
     overWrite (key: number, data: Partial<originalData>) {
