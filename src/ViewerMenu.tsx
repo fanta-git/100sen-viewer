@@ -15,6 +15,8 @@ const ViewerMenu: React.FC<Props> = ({ playlistManager }) => {
     const urlInputRef = React.useRef<HTMLInputElement>(null!);
     const csvInputRef = React.useRef<HTMLInputElement>(null!);
     const radioSelectedRef = React.useRef<string>('from-url');
+    const sortTypeRef = React.useRef<HTMLSelectElement>(null!);
+    const sortRevRef = React.useRef<HTMLInputElement>(null!);
 
     const [isloadbtnDisabled, setIsLoadbtnDisabled] = React.useState(false);
 
@@ -38,6 +40,7 @@ const ViewerMenu: React.FC<Props> = ({ playlistManager }) => {
             case 'form-csv': {
                 const filePaths = csvInputRef.current.files;
                 if (filePaths === null) return;
+                playlistManager.clear();
                 for (const { path } of filePaths) {
                     const csvData = await window.api.csvParseSync(path, { columns: true }) as Record<string, string>[];
                     for (const songData of csvData) playlistManager.add(pick(songData, originalDataKeys));
@@ -77,6 +80,10 @@ const ViewerMenu: React.FC<Props> = ({ playlistManager }) => {
         const inputs = [urlInputRef, csvInputRef];
         for (const { current } of inputs) current.disabled = !current.id.startsWith(event.target.id);
     };
+
+    const sortList = () => {
+        playlistManager.sort(sortTypeRef.current.value, sortRevRef.current.checked);
+    };
     
     return (
         <div id="viewer-menu">
@@ -96,6 +103,15 @@ const ViewerMenu: React.FC<Props> = ({ playlistManager }) => {
             <div className="edit-wrapper">
                 <div className="edit-item-wrapper">
                     <button id="trim-title-btn" onClick={() => playlistManager.trimTitle()}>タイトルの自動抜き出し</button>
+                </div>
+                <div className="edit-item-wrapper">
+                    <select id="sort-type-slc" onChange={sortList} ref={sortTypeRef}>
+                        <option value="key">読み込み順</option>
+                        <option value="postDate">投稿日順</option>
+                        <option value="title">タイトル順</option>
+                        <option value="userName">投稿者順</option>
+                    </select>
+                    <label><input type="checkbox" id="sort-rev-che" onChange={sortList} ref={sortRevRef} />逆順</label>
                 </div>
             </div>
             <div className="to-wrapper">
