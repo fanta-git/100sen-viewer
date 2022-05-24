@@ -1,5 +1,4 @@
 import React from "react";
-import { originalData, SongDataForTable } from "./types";
 import domtoimage from 'dom-to-image';
 import PlaylistDataManager from './PlaylistDataManager';
 
@@ -7,10 +6,10 @@ type Props = {
     playlistManager: PlaylistDataManager
 };
 
-const isOriginalData = (data: Record<string, string>[]): data is originalData[] => {
-    const keys: (keyof SongDataForTable)[] = ['title', 'userName', 'thumbnail'];
-    return data.every(v => keys.every(k => k in v));
-}
+const pick = <T extends Object, U extends keyof T>(from: T, keys: readonly U[]) => 
+    keys.reduce((p, c) => Object.assign(p, { [c]: from[c] }), {}) as Pick<T, U>;
+
+const originalDataKeys = ['title', 'userName', 'thumbnail', 'postDate'] as const;
 
 const ViewerMenu: React.FC<Props> = ({ playlistManager }) => {
     const urlInputRef = React.useRef<HTMLInputElement>(null!);
@@ -40,9 +39,8 @@ const ViewerMenu: React.FC<Props> = ({ playlistManager }) => {
                 const filePaths = csvInputRef.current.files;
                 if (filePaths === null) return;
                 for (const { path } of filePaths) {
-                    const csvData = await window.api.csvParseSync(path, { columns: true });
-                    if (!isOriginalData(csvData)) return;
-                    for (const songData of csvData) playlistManager.add(songData);
+                    const csvData = await window.api.csvParseSync(path, { columns: true }) as Record<string, string>[];
+                    for (const songData of csvData) playlistManager.add(pick(songData, originalDataKeys));
                 }
                 break;
             }
@@ -58,7 +56,10 @@ const ViewerMenu: React.FC<Props> = ({ playlistManager }) => {
     };
 
     const outputCsv = async () => {
-        const outputData = await window.api.csvStringifySync(playlistManager.playlist, { header: true, quoted: true });
+        const outputData = await window.api.csvStringifySync(
+            playlistManager.playlist.map(v => pick(v.original, originalDataKeys)),
+            { header: true, quoted: true }
+        );
         const blob = new Blob([outputData], { type: 'text/csv' });
         const uri = URL.createObjectURL(blob);
         saveFile(uri, '100sen_data');

@@ -47,7 +47,7 @@ class PlaylistDataManager {
             /(feat|ft) ?\..*/,
         ];
         for (const item of newData) {
-            const trimedTitle = regs.reduce((tit, reg) => tit.replace(reg, ''), item.title).trim();
+            const trimedTitle = regs.reduce((tit, reg) => tit.replace(reg, ''), item.title ?? '').trim();
             this.overWrite(item.key, { title: trimedTitle });
         }
     }
