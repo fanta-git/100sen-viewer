@@ -1,6 +1,7 @@
 import React, { DragEventHandler, MouseEventHandler } from 'react';
 import PlaylistDataManager from './PlaylistDataManager';
 
+import noDataImage from './assets/no_data.png';
 import './style.css';
 
 type Props = {
@@ -8,8 +9,13 @@ type Props = {
 }
 
 const isKey = <T extends Object>(key: string | number | symbol, obj: T): key is keyof T => key in obj;
+const toCamelCase = (str: string) => {
+    return str.split('-').map((word, index) => index
+        ? word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+        : word.toLowerCase()
+    ).join('');
+};
 
-const DND_ITEM_PREFIX = '100sen-viewer';
 const TYPE_JP = { title: 'タイトル', userName: '投稿者名', thumbnail: 'サムネイルのURL' };
 const DRAG_OVER_CLASSES = { left: 'drag-over-left', right: 'drag-over-right' };
 
@@ -18,7 +24,7 @@ const PlaylistTable: React.FC<Props> = ({ playlistManager }) => {
     let dropKey = -1;
     for (const videoData of playlistManager.playlist) {
         const updateContent: MouseEventHandler<HTMLDivElement | HTMLImageElement> = async e => {
-            const type = e.currentTarget.className;
+            const type = toCamelCase(e.currentTarget.className);
             if (!isKey(type, TYPE_JP)) return;
             const newContent = await window.api.electronPrompt({
                 title: TYPE_JP[type] + 'を変更',
@@ -66,7 +72,7 @@ const PlaylistTable: React.FC<Props> = ({ playlistManager }) => {
 
         items.push(
             <div className="song" key={videoData.key} draggable='true' {...dragEvents}>
-                <img className="thumbnail" onClick={updateContent} src={videoData.thumbnail} draggable="false" />
+                <img className="thumbnail" onClick={updateContent} src={videoData.thumbnail} draggable="false" onError={e => {e.currentTarget.src = noDataImage}} />
                 <div className="title" onClick={updateContent}>{videoData.title}</div>
                 <div className="user-name" onClick={updateContent}>{videoData.userName}</div>
             </div>
