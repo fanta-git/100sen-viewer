@@ -2,16 +2,12 @@ import { contextBridge } from "electron";
 
 import getListData from './apis/getListData';
 import getVideoData from "./apis/getVideoData";
-import electronPrompt from "./apis/electronPrompt";
-import csvStringifySync from "./apis/csvStringifySync";
-import csvParseSync from "./apis/csvParserSync";
+import ipcRenderInvoke from "./apis/ipcRenderInvoke";
 
 const preload = {
     getListData,
     getVideoData,
-    electronPrompt,
-    csvStringifySync,
-    csvParseSync
+    ...ipcRenderInvoke
 };
 
 contextBridge.exposeInMainWorld('api', preload);
