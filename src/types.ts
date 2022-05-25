@@ -48,9 +48,10 @@ export type KiiteSongData = {
 };
 
 export type originalData = {
-    title: string,
-    userName: string,
-    thumbnail: string
+    title?: string,
+    userName?: string,
+    thumbnail?: string,
+    postDate?: string
 };
 
 export type SongDataForTable = originalData & {

@@ -18,9 +18,6 @@ div#root {
     width: fit-content;
     display: grid;
     grid-template-columns: repeat(10, 1fr);
-    border-width: 2px 0 0 2px;
-    border-style: solid;
-    border-color: black;
 }
 
 #listdata-table:empty {
@@ -29,9 +26,18 @@ div#root {
 
 .song {
     width: 100px;
-    border-width: 0 2px 2px 0;
-    border-style: solid;
-    border-color: black;
+    border: 2px solid black;
+    margin: 0 -2px -2px 0;
+}
+
+.song.drag-over-right {
+    border-right-color: red;
+    z-index: 1;
+}
+
+.song.drag-over-left {
+    border-left-color: red;
+    z-index: 1;
 }
 
 .thumbnail {
