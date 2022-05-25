@@ -4,20 +4,31 @@ import { originalData, SongDataForTable } from "./types";
 class PlaylistDataManager {
     playlist: SongDataForTable[];
     setPlaylist: React.Dispatch<React.SetStateAction<SongDataForTable[]>>;
-    key: number;
+    key: React.MutableRefObject<number>;
 
     constructor () {
         [this.playlist, this.setPlaylist] = React.useState<SongDataForTable[]>([]);
-        this.key = 0;
+        this.key = React.useRef(0);
     }
 
     clear () {
         this.setPlaylist([]);
-        this.key = 0;
+        this.key.current = 0;
+    }
+
+    deleat(key: number) {
+        this.setPlaylist(list => {
+            const newList = [...list];
+            const index = newList.findIndex(v => v.key === key);
+            if (index === -1) return list;
+            newList.splice(index, 1);
+            this.key.current -= 1;
+            return newList;
+        });
     }
 
     add (songData: originalData) {
-        const key = this.key;
+        const key = this.key.current;
         this.setPlaylist(list => [
             ...list,
             {
@@ -26,7 +37,7 @@ class PlaylistDataManager {
                 original: { ...songData }
             }
         ]);
-        this.key += 1;
+        this.key.current += 1;
     }
 
     overWrite (key: number, data: Partial<originalData>) {

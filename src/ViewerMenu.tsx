@@ -84,6 +84,15 @@ const ViewerMenu: React.FC<Props> = ({ playlistManager }) => {
     const sortList = () => {
         playlistManager.sort(sortTypeRef.current.value, sortRevRef.current.checked);
     };
+
+    const addSong = () => {
+        playlistManager.add({
+            thumbnail: '',
+            title: '',
+            userName: '',
+            postDate: ''
+        });
+    }
     
     return (
         <div id="viewer-menu">
@@ -112,6 +121,9 @@ const ViewerMenu: React.FC<Props> = ({ playlistManager }) => {
                         <option value="userName">投稿者順</option>
                     </select>
                     <label><input type="checkbox" id="sort-rev-che" onChange={sortList} ref={sortRevRef} />逆順</label>
+                </div>
+                <div className="edit-item-wrapper">
+                    <button onClick={addSong}>曲の追加</button>
                 </div>
             </div>
             <div className="to-wrapper">

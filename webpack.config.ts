@@ -58,7 +58,7 @@ const base: Configuration = {
         test: /\.(bmp|ico|gif|jpe?g|png|svg|ttf|eot|woff?2?)$/,
         /** アセット類も同様に asset/inline は使用しない */
         /** なお、webpack@5.x では file-loader or url-loader は不要になった */
-        type: 'asset/resource',
+        type: 'asset',
       },
     ],
   },
