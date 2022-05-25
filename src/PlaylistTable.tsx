@@ -15,6 +15,7 @@ const DRAG_OVER_CLASSES = { left: 'drag-over-left', right: 'drag-over-right' };
 
 const PlaylistTable: React.FC<Props> = ({ playlistManager }) => {
     const items: React.ReactElement[] = [];
+    let dropKey = -1;
     for (const videoData of playlistManager.playlist) {
         const updateContent: MouseEventHandler<HTMLDivElement | HTMLImageElement> = async e => {
             const type = e.currentTarget.className;
@@ -29,7 +30,8 @@ const PlaylistTable: React.FC<Props> = ({ playlistManager }) => {
 
         const dragEvents: Record<string, DragEventHandler<HTMLDivElement>> = {
             onDragStart: e => {
-                e.dataTransfer.setData('text', `${DND_ITEM_PREFIX},${videoData.key}`);
+                e.dataTransfer.effectAllowed = 'move';
+                dropKey = videoData.key;
             },
             onDragOver: e => {
                 e.stopPropagation();
@@ -47,15 +49,19 @@ const PlaylistTable: React.FC<Props> = ({ playlistManager }) => {
                 e.currentTarget.classList.remove(DRAG_OVER_CLASSES.left, DRAG_OVER_CLASSES.right);
             },
             onDrop: e => {
-                const [prefix, data] = e.dataTransfer.getData('text').split(',');
-                if (prefix !== DND_ITEM_PREFIX) return;
+                if (dropKey < 0) return;
                 e.stopPropagation();
                 e.preventDefault();
                 const isRight = e.currentTarget.classList.contains(DRAG_OVER_CLASSES.right);
-                console.log(`from${data}\nto  ${videoData.key}\n${isRight}`);
-                playlistManager.move(Number(data), videoData.key + (isRight ? 1 : 0));
+                playlistManager.move(dropKey, videoData.key + (isRight ? 1 : 0));
                 e.currentTarget.classList.remove(DRAG_OVER_CLASSES.left, DRAG_OVER_CLASSES.right);
+                dropKey = -1;
             },
+            onDragEnd: e => {
+                if (dropKey < 0) return;
+                playlistManager.deleat(dropKey);
+                dropKey = -1;
+            }
         };
 
         items.push(

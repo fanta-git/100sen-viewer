@@ -16,6 +16,17 @@ class PlaylistDataManager {
         this.key = 0;
     }
 
+    deleat(key: number) {
+        this.setPlaylist(list => {
+            const newList = [...list];
+            const index = newList.findIndex(v => v.key === key);
+            if (index === -1) return list;
+            newList.splice(index, 1);
+            this.key -= 1;
+            return newList;
+        });
+    }
+
     add (songData: originalData) {
         const key = this.key;
         this.setPlaylist(list => [
