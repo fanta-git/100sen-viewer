@@ -38,6 +38,17 @@ class PlaylistDataManager {
         });
     }
 
+    move (fromKey: number, toKey: number) {
+        this.setPlaylist(list => {
+            const newList = [...list];
+            const fromIndex = newList.findIndex(v => v.key === fromKey);
+            const toIndex = newList.findIndex(v => v.key === toKey);
+            const [fromData] = newList.splice(fromIndex, 1);
+            const insertedList = [...newList.slice(0, toIndex), fromData, ...newList.slice(toIndex)]
+            return insertedList;
+        });
+    }
+
     trimTitle () {
         const newData = [...this.playlist];
         const regs: RegExp[] = [

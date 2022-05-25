@@ -42,7 +42,6 @@
     "css-loader": "^6.7.1",
     "electron": "^18.2.3",
     "electron-builder": "^23.0.3",
-    "electron-packager": "^15.5.1",
     "electron-reload": "^2.0.0-alpha.1",
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.6.0",
