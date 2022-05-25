@@ -1,6 +1,7 @@
 import React from "react";
 import domtoimage from 'dom-to-image';
 import PlaylistDataManager from './PlaylistDataManager';
+import { dialog } from "electron";
 
 type Props = {
     playlistManager: PlaylistDataManager
@@ -27,7 +28,8 @@ const ViewerMenu: React.FC<Props> = ({ playlistManager }) => {
                 const videoIds = await window.api.getListData(urlInputRef.current.value);
                 if (videoIds === undefined) {
                     setIsLoadbtnDisabled(false);
-                    throw Error('URLが間違っています！');
+                    await window.api.showErrorBox('URLが間違っています', 'KiiteのプレイリストのURLか、ニコニコ動画のマイリストのURLを入力してください')
+                    return;
                 }
                 playlistManager.clear();
                 for (const videoId of videoIds) {
