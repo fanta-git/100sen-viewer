@@ -1,7 +1,6 @@
 import React from "react";
 import domtoimage from 'dom-to-image';
 import PlaylistDataManager from './PlaylistDataManager';
-import { dialog } from "electron";
 
 type Props = {
     playlistManager: PlaylistDataManager
@@ -11,13 +10,15 @@ const pick = <T extends Object, U extends keyof T>(from: T, keys: readonly U[]) 
     keys.reduce((p, c) => Object.assign(p, { [c]: from[c] }), {}) as Pick<T, U>;
 
 const originalDataKeys = ['title', 'userName', 'thumbnail', 'postDate'] as const;
-
+    
+    
 const ViewerMenu: React.FC<Props> = ({ playlistManager }) => {
     const urlInputRef = React.useRef<HTMLInputElement>(null!);
     const csvInputRef = React.useRef<HTMLInputElement>(null!);
     const radioSelectedRef = React.useRef<string>('from-url');
     const sortTypeRef = React.useRef<HTMLSelectElement>(null!);
     const sortRevRef = React.useRef<HTMLInputElement>(null!);
+    const highQuorityRef = React.useRef<HTMLInputElement>(null!);
 
     const [isloadbtnDisabled, setIsLoadbtnDisabled] = React.useState(false);
 
@@ -56,8 +57,10 @@ const ViewerMenu: React.FC<Props> = ({ playlistManager }) => {
     const outputJpeg = async () => {
         const songTable = document.getElementById('listdata-table');
         if (songTable === null) return;
-        const imageUrl = await domtoimage.toJpeg(songTable);
-        saveFile(imageUrl, '100sen');
+        if (highQuorityRef.current.checked) songTable.classList.add('double');
+        const imageUrl = await domtoimage.toBlob(songTable);
+        songTable.classList.remove('double');
+        saveFile(URL.createObjectURL(imageUrl), '100sen');
     };
 
     const outputCsv = async () => {
@@ -130,10 +133,13 @@ const ViewerMenu: React.FC<Props> = ({ playlistManager }) => {
             </div>
             <div className="to-wrapper">
                 <div className="to-item-wrapper">
+                    <button id="output-jpeg-btn" onClick={outputCsv}>CSVファイルとして出力</button>
+                </div>
+                <div className="to-item-wrapper">
                     <button id="convert-btn" onClick={outputJpeg}>画像として出力</button>
                 </div>
                 <div className="to-item-wrapper">
-                    <button id="output-jpeg-btn" onClick={outputCsv}>CSVファイルとして出力</button>
+                    <label><input type="checkbox" id="high-quality" ref={highQuorityRef} />画質を向上</label>
                 </div>
             </div>
         </div>

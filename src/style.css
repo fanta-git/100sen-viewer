@@ -1,10 +1,10 @@
-div#root {
-    width: 1022px;
+#root {
     margin: auto;
 }
 
 #viewer-menu {
     border: 1px solid black;
+    width: calc(1024px - 20px);
     margin-bottom: 10px;
     padding: 10px;
 }
@@ -15,19 +15,21 @@ div#root {
 
 #listdata-table {
     background-color: white;
-    width: fit-content;
+    width: 1024px;
     display: grid;
     grid-template-columns: repeat(10, 1fr);
 }
 
-#listdata-table:empty {
-    display: none;
+#listdata-table.double {
+    width: 2048px;
+    font-size: 2em;
 }
 
 .song {
-    width: 100px;
+    width: calc(100% + 2px);
+    height: calc(100% + 2px);
     border: 2px solid black;
-    margin: 0 -2px -2px 0;
+    box-sizing: border-box;
 }
 
 .song.drag-over-right {
@@ -41,8 +43,8 @@ div#root {
 }
 
 .thumbnail {
-    height: 55px;
-    width: 100px;
+    width: 100%;
+    aspect-ratio: 16 / 9;
     object-fit: cover;
 }
 
@@ -57,13 +59,14 @@ div#root {
 
 .title {
     border-bottom: 1px dashed black;
-    height: 64px;
-    font-size: 14px;
+    aspect-ratio: 5 / 3;
+    font-size: 0.9em;
 }
 
 .user-name {
-    height: 36px;
-    font-size: 12px;
+    height: auto;
+    font-size: 0.75em;
+    aspect-ratio: 3 / 1;
 }
 
 div#viewer-menu {
