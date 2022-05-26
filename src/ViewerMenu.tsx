@@ -9,7 +9,7 @@ type Props = {
 const pick = <T extends Record<string, unknown>, U extends keyof T>(from: T, keys: readonly U[]) =>
     keys.reduce((p, c) => Object.assign(p, { [c]: from[c] }), {}) as Pick<T, U>;
 
-const ORIGINAL_KEYS = ['title', 'userName', 'thumbnail', 'postDate'] as const;
+const ORIGINAL_KEYS = ['title', 'userName', 'thumbnail', 'postDate', 'videoId'] as const;
 
 const ViewerMenu: React.FC<Props> = ({ tableData }) => {
     return (
@@ -24,6 +24,7 @@ const ViewerMenu: React.FC<Props> = ({ tableData }) => {
 const FromMenu: React.FC<Props> = ({ tableData }) => {
     const urlInputRef = React.useRef<HTMLInputElement>(null!);
     const csvInputRef = React.useRef<HTMLInputElement>(null!);
+    const isJoinSongsRef = React.useRef<HTMLInputElement>(null!);
     const fromTypeRef = React.useRef<string>('from-url');
     const [isloadbtnDisabled, setIsLoadbtnDisabled] = React.useState(false);
 
@@ -37,7 +38,7 @@ const FromMenu: React.FC<Props> = ({ tableData }) => {
                 await window.api.showErrorBox('URLが間違っています', 'KiiteのプレイリストのURLか、ニコニコ動画のマイリストのURLを入力してください');
                 return;
             }
-            tableData.clear();
+            if (!isJoinSongsRef.current.checked) tableData.clear();
             for (const videoId of videoIds) {
                 const songData = await window.api.getVideoData(videoId);
                 if (songData === undefined) continue;
@@ -48,7 +49,7 @@ const FromMenu: React.FC<Props> = ({ tableData }) => {
         case 'form-csv': {
             const filePaths = csvInputRef.current.files;
             if (filePaths === null) return;
-            tableData.clear();
+            if (!isJoinSongsRef.current.checked) tableData.clear();
             for (const { path } of filePaths) {
                 const csvData = await window.api.csvParseSync(path, { columns: true }) as Record<string, string>[];
                 for (const songData of csvData) tableData.add(pick(songData, ORIGINAL_KEYS));
@@ -76,6 +77,7 @@ const FromMenu: React.FC<Props> = ({ tableData }) => {
                 <input type="file" id="form-csv-filebox" accept=".csv" ref={csvInputRef} disabled />
             </div>
             <div className="from-load">
+                <label><input type="checkbox" id="isJoinSongs" ref={isJoinSongsRef} />追加で読み込む</label>
                 <button id="load-btn" onClick={loadPlaylist} disabled={isloadbtnDisabled}>表示</button>
             </div>
         </div>

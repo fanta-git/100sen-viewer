@@ -27,16 +27,18 @@ class TableData {
     }
 
     add (songData: originalData) {
-        const key = this.key.current;
-        this.setPlaylist(list => [
-            ...list,
-            {
-                ...songData,
-                key,
-                original: { ...songData }
-            }
-        ]);
-        this.key.current += 1;
+        const key = this.key;
+        this.setPlaylist(list => {
+            if (songData.videoId && list.some(v => v.videoId === songData.videoId)) return list;
+            return ([
+                ...list,
+                {
+                    ...songData,
+                    key: key.current++,
+                    original: { ...songData }
+                }
+            ]);
+        });
     }
 
     overWrite (key: number, data: Partial<originalData>) {

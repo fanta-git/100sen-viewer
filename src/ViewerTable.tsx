@@ -31,7 +31,7 @@ const ViewerTable: React.FC<Props> = ({ tableData }) => {
                 label: '変更後の' + TYPE_JP[type],
                 value: videoData.original[type]
             });
-            if (newContent !== null) tableData.overWrite(videoData.key, { [type]: newContent });
+            if (newContent !== null) tableData.overWrite(videoData.key, { [type]: newContent.trim() });
         };
 
         const dragEvents: Record<string, DragEventHandler<HTMLDivElement>> = {
