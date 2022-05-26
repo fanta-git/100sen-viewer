@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import type { PlaylistContents } from '../types';
 
-type getAPITypes =  (listId: string) => Promise<string[] | undefined>;
+type getAPITypes = (listId: string) => Promise<string[] | undefined>;
 
 const KIITE_END_POINT = 'https://cafe.kiite.jp/api/playlists/contents/detail';
 const NICO_END_POINT = 'https://www.nicovideo.jp/mylist/';

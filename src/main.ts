@@ -1,4 +1,4 @@
-import path, { resolve } from 'path';
+import path from 'path';
 import { app, BrowserWindow, dialog, ipcMain } from 'electron';
 import electronPrompt from 'electron-prompt';
 import { stringifier, stringify, parser, parse } from 'csv';
@@ -30,7 +30,10 @@ ipcMain.handle('csvStringifySync', (event, input: stringifier.Input, option: str
     resolve => stringify(
         input,
         option,
-        (err, output) => resolve(output)
+        (err, output) => {
+            if (err) throw err;
+            resolve(output);
+        }
     )
 ));
 
@@ -38,7 +41,10 @@ ipcMain.handle('csvParseSync', (event, filePath: string, option: parser.Options)
     resolve => parse(
         fs.readFileSync(filePath, { encoding: 'utf8' }),
         option,
-        (err, output) => resolve(output)
+        (err, output) => {
+            if (err) throw err;
+            resolve(output);
+        }
     )
 ));
 

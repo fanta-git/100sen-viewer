@@ -1,7 +1,7 @@
-import React from "react";
-import { originalData, SongDataForTable } from "./types";
+import React from 'react';
+import { originalData, SongDataForTable } from './types';
 
-class PlaylistDataManager {
+class TableData {
     playlist: SongDataForTable[];
     setPlaylist: React.Dispatch<React.SetStateAction<SongDataForTable[]>>;
     key: React.MutableRefObject<number>;
@@ -16,13 +16,12 @@ class PlaylistDataManager {
         this.key.current = 0;
     }
 
-    deleat(key: number) {
+    deleat (key: number) {
         this.setPlaylist(list => {
             const newList = [...list];
             const index = newList.findIndex(v => v.key === key);
             if (index === -1) return list;
             newList.splice(index, 1);
-            this.key.current -= 1;
             return newList;
         });
     }
@@ -33,7 +32,7 @@ class PlaylistDataManager {
             ...list,
             {
                 ...songData,
-                key: key,
+                key,
                 original: { ...songData }
             }
         ]);
@@ -56,7 +55,7 @@ class PlaylistDataManager {
             const [fromData] = newList.splice(fromIndex, 1);
             const toIndex = newList.findIndex(v => v.key === toKey);
             if (toIndex === -1) return list;
-            const insertedList = [...newList.slice(0, toIndex), fromData, ...newList.slice(toIndex)]
+            const insertedList = [...newList.slice(0, toIndex), fromData, ...newList.slice(toIndex)];
             return insertedList;
         });
     }
@@ -69,7 +68,7 @@ class PlaylistDataManager {
             /(」|｣|』).*/,
             /(\/|／).*/,
             /.*-/,
-            /(feat|ft) ?\..*/,
+            /(feat|ft) ?\..*/
         ];
         for (const item of newData) {
             const trimedTitle = regs.reduce((tit, reg) => tit.replace(reg, ''), item.title ?? '').trim();
@@ -79,30 +78,30 @@ class PlaylistDataManager {
 
     sort (type: string, isReverse: boolean) {
         const rev = isReverse ? -1 : 1;
-        const sortFunc = <T>(convFunc: (from: T) => any) => (fromA: T, fromB: T) => {
+        const sortFunc = <T>(convFunc: (from: T) => number | string | undefined) => (fromA: T, fromB: T) => {
             const [a, b] = [convFunc(fromA), convFunc(fromB)];
             if (a === undefined || b === undefined) return 1;
             if (a === b) return 0;
             if (a < b) return -1 * rev;
             return 1 * rev;
-        }
+        };
         switch (type) {
-            case 'key':
-            case 'title':
-            case 'userName':{
-                this.setPlaylist(list => [...list].sort(
-                    sortFunc(v => v[type])
-                ));
-                break;
-            }
-            case 'postDate': {
-                this.setPlaylist(list => [...list].sort(
-                    sortFunc(v => v.postDate && Date.parse(v.postDate))
-                ))
-                break;
-            }
+        case 'key':
+        case 'title':
+        case 'userName':{
+            this.setPlaylist(list => [...list].sort(
+                sortFunc(v => v[type])
+            ));
+            break;
+        }
+        case 'postDate': {
+            this.setPlaylist(list => [...list].sort(
+                sortFunc(v => v.postDate && Date.parse(v.postDate))
+            ));
+            break;
+        }
         }
     }
 }
 
-export default PlaylistDataManager;
+export default TableData;
