@@ -30,7 +30,10 @@ ipcMain.handle('csvStringifySync', (event, input: stringifier.Input, option: str
     resolve => stringify(
         input,
         option,
-        (_err, output) => resolve(output)
+        (err, output) => {
+            if (err) throw err;
+            resolve(output);
+        }
     )
 ));
 
@@ -38,7 +41,10 @@ ipcMain.handle('csvParseSync', (event, filePath: string, option: parser.Options)
     resolve => parse(
         fs.readFileSync(filePath, { encoding: 'utf8' }),
         option,
-        (_err, output) => resolve(output)
+        (err, output) => {
+            if (err) throw err;
+            resolve(output);
+        }
     )
 ));
 
