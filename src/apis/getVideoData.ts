@@ -17,7 +17,8 @@ const getVideoData = async (videoId: string) => {
         title: resReader('title'),
         userName: resReader('user_nickname'),
         thumbnail: resReader('thumbnail_url'),
-        postDate: resReader('first_retrieve')
+        postDate: resReader('first_retrieve'),
+        videoId: resReader('video_id')
     };
 
     await timer(CALL_API_INTERVAL);

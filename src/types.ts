@@ -51,7 +51,8 @@ export type originalData = {
     title?: string,
     userName?: string,
     thumbnail?: string,
-    postDate?: string
+    postDate?: string,
+    videoId?: string
 };
 
 export type SongDataForTable = originalData & {
