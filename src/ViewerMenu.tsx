@@ -65,7 +65,7 @@ const ViewerMenu: React.FC<Props> = ({ playlistManager }) => {
 
     const outputCsv = async () => {
         const outputData = await window.api.csvStringifySync(
-            playlistManager.playlist.map(v => pick(v.original, originalDataKeys)),
+            playlistManager.playlist.map(v => pick(v, originalDataKeys)),
             { header: true, quoted: true }
         );
         const blob = new Blob([outputData], { type: 'text/csv' });
