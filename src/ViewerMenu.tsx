@@ -1,7 +1,6 @@
 import React from "react";
 import domtoimage from 'dom-to-image';
 import PlaylistDataManager from './PlaylistDataManager';
-import { dialog } from "electron";
 
 type Props = {
     playlistManager: PlaylistDataManager
@@ -10,21 +9,7 @@ type Props = {
 const pick = <T extends Object, U extends keyof T>(from: T, keys: readonly U[]) => 
     keys.reduce((p, c) => Object.assign(p, { [c]: from[c] }), {}) as Pick<T, U>;
 
-const PNG_SCALE = 2;
 const originalDataKeys = ['title', 'userName', 'thumbnail', 'postDate'] as const;
-// function downloadAsImg (el, filename, scale){
-//     if (scale !== undefined) var props = {
-//         width: el.clientWidth_scale,
-//         height: el.clientHeight_scale,
-//         style: {
-//             'transform': `scale('${scale}')`,
-//             'transform-origin': 'top left'
-//         }
-//     }
-//     domtoimage.toBlob(el, props).then(function (blob) {
-//         window.saveAs(blob, filename === undefined ? 'image.png' : filename);
-//     });
-// }
     
     
 const ViewerMenu: React.FC<Props> = ({ playlistManager }) => {
@@ -33,6 +18,7 @@ const ViewerMenu: React.FC<Props> = ({ playlistManager }) => {
     const radioSelectedRef = React.useRef<string>('from-url');
     const sortTypeRef = React.useRef<HTMLSelectElement>(null!);
     const sortRevRef = React.useRef<HTMLInputElement>(null!);
+    const highQuorityRef = React.useRef<HTMLInputElement>(null!);
 
     const [isloadbtnDisabled, setIsLoadbtnDisabled] = React.useState(false);
 
@@ -71,7 +57,7 @@ const ViewerMenu: React.FC<Props> = ({ playlistManager }) => {
     const outputJpeg = async () => {
         const songTable = document.getElementById('listdata-table');
         if (songTable === null) return;
-        songTable.classList.add('double');
+        if (highQuorityRef.current.checked) songTable.classList.add('double');
         const imageUrl = await domtoimage.toBlob(songTable);
         songTable.classList.remove('double');
         saveFile(URL.createObjectURL(imageUrl), '100sen');
@@ -147,10 +133,13 @@ const ViewerMenu: React.FC<Props> = ({ playlistManager }) => {
             </div>
             <div className="to-wrapper">
                 <div className="to-item-wrapper">
+                    <button id="output-jpeg-btn" onClick={outputCsv}>CSVファイルとして出力</button>
+                </div>
+                <div className="to-item-wrapper">
                     <button id="convert-btn" onClick={outputJpeg}>画像として出力</button>
                 </div>
                 <div className="to-item-wrapper">
-                    <button id="output-jpeg-btn" onClick={outputCsv}>CSVファイルとして出力</button>
+                    <label><input type="checkbox" id="high-quality" ref={highQuorityRef} />画質を向上</label>
                 </div>
             </div>
         </div>
