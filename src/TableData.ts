@@ -1,7 +1,7 @@
 import React from 'react';
 import { originalData, SongDataForTable } from './types';
 
-class PlaylistDataManager {
+class TableData {
     playlist: SongDataForTable[];
     setPlaylist: React.Dispatch<React.SetStateAction<SongDataForTable[]>>;
     key: React.MutableRefObject<number>;
@@ -105,4 +105,4 @@ class PlaylistDataManager {
     }
 }
 
-export default PlaylistDataManager;
+export default TableData;

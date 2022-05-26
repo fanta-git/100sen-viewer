@@ -1,11 +1,11 @@
 import React, { DragEventHandler, MouseEventHandler } from 'react';
-import PlaylistDataManager from './PlaylistDataManager';
+import TableData from './TableData';
 
 import noDataImage from './assets/no_data.png';
 import './style.css';
 
 type Props = {
-    playlistManager: PlaylistDataManager
+    tableData: TableData
 }
 
 const isKey = <T extends Record<string, unknown>>(key: string | number | symbol, obj: T): key is keyof T => key in obj;
@@ -19,10 +19,10 @@ const toCamelCase = (str: string) => {
 const TYPE_JP = { title: 'タイトル', userName: '投稿者名', thumbnail: 'サムネイルのURL' };
 const DRAG_OVER_CLASSES = { left: 'drag-over-left', right: 'drag-over-right' };
 
-const PlaylistTable: React.FC<Props> = ({ playlistManager }) => {
+const ViewerTable: React.FC<Props> = ({ tableData }) => {
     const items: React.ReactElement[] = [];
     let dropKey = -1;
-    for (const videoData of playlistManager.playlist) {
+    for (const videoData of tableData.playlist) {
         const updateContent: MouseEventHandler<HTMLDivElement | HTMLImageElement> = async e => {
             const type = toCamelCase(e.currentTarget.className);
             if (!isKey(type, TYPE_JP)) return;
@@ -31,7 +31,7 @@ const PlaylistTable: React.FC<Props> = ({ playlistManager }) => {
                 label: '変更後の' + TYPE_JP[type],
                 value: videoData.original[type]
             });
-            if (newContent !== null) playlistManager.overWrite(videoData.key, { [type]: newContent });
+            if (newContent !== null) tableData.overWrite(videoData.key, { [type]: newContent });
         };
 
         const dragEvents: Record<string, DragEventHandler<HTMLDivElement>> = {
@@ -59,13 +59,13 @@ const PlaylistTable: React.FC<Props> = ({ playlistManager }) => {
                 e.stopPropagation();
                 e.preventDefault();
                 const isRight = e.currentTarget.classList.contains(DRAG_OVER_CLASSES.right);
-                playlistManager.move(dropKey, videoData.key + (isRight ? 1 : 0));
+                tableData.move(dropKey, videoData.key + (isRight ? 1 : 0));
                 e.currentTarget.classList.remove(DRAG_OVER_CLASSES.left, DRAG_OVER_CLASSES.right);
                 dropKey = -1;
             },
             onDragEnd: () => {
                 if (dropKey < 0) return;
-                playlistManager.deleat(dropKey);
+                tableData.deleat(dropKey);
                 dropKey = -1;
             }
         };
@@ -82,4 +82,4 @@ const PlaylistTable: React.FC<Props> = ({ playlistManager }) => {
     return <div id='listdata-table'>{items}</div>;
 };
 
-export default PlaylistTable;
+export default ViewerTable;

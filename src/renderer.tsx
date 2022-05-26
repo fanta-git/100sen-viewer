@@ -1,21 +1,21 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 
-import PlaylistTable from './PlaylistTable';
+import ViewerTable from './ViewerTable';
 import ViewerMenu from './ViewerMenu';
-import PlaylistDataManager from './PlaylistDataManager';
+import TableData from './TableData';
 
 const RootDiv: React.FC = () => {
-    const listManager = new PlaylistDataManager();
+    const listManager = new TableData();
 
     return (
         <>
-            <ViewerMenu playlistManager={listManager} />
-            <PlaylistTable playlistManager={listManager} />
+            <ViewerMenu tableData={listManager} />
+            <ViewerTable tableData={listManager} />
         </>
     );
 };
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
-root.render(<RootDiv/>);
+root.render(<RootDiv />);

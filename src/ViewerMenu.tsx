@@ -1,9 +1,9 @@
 import React from 'react';
 import domtoimage from 'dom-to-image';
-import PlaylistDataManager from './PlaylistDataManager';
+import TableData from './TableData';
 
 type Props = {
-    playlistManager: PlaylistDataManager
+    tableData: TableData
 };
 
 const pick = <T extends Record<string, unknown>, U extends keyof T>(from: T, keys: readonly U[]) =>
@@ -11,25 +11,25 @@ const pick = <T extends Record<string, unknown>, U extends keyof T>(from: T, key
 
 const ORIGINAL_KEYS = ['title', 'userName', 'thumbnail', 'postDate'] as const;
 
-const ViewerMenu: React.FC<Props> = ({ playlistManager }) => {
+const ViewerMenu: React.FC<Props> = ({ tableData }) => {
     return (
         <div id="viewer-menu">
-            <FromMenu playlistManager={playlistManager} />
-            <EditMenu playlistManager={playlistManager} />
-            <ToMenu playlistManager={playlistManager} />
+            <FromMenu tableData={tableData} />
+            <EditMenu tableData={tableData} />
+            <ToMenu tableData={tableData} />
         </div>
     );
 };
 
-const FromMenu: React.FC<Props> = ({ playlistManager }) => {
+const FromMenu: React.FC<Props> = ({ tableData }) => {
     const urlInputRef = React.useRef<HTMLInputElement>(null!);
     const csvInputRef = React.useRef<HTMLInputElement>(null!);
-    const radioSelectedRef = React.useRef<string>('from-url');
+    const fromTypeRef = React.useRef<string>('from-url');
     const [isloadbtnDisabled, setIsLoadbtnDisabled] = React.useState(false);
 
     const loadPlaylist = async () => {
         setIsLoadbtnDisabled(true);
-        switch (radioSelectedRef.current) {
+        switch (fromTypeRef.current) {
         case 'from-url': {
             const videoIds = await window.api.getListData(urlInputRef.current.value);
             if (videoIds === undefined) {
@@ -37,21 +37,21 @@ const FromMenu: React.FC<Props> = ({ playlistManager }) => {
                 await window.api.showErrorBox('URLが間違っています', 'KiiteのプレイリストのURLか、ニコニコ動画のマイリストのURLを入力してください');
                 return;
             }
-            playlistManager.clear();
+            tableData.clear();
             for (const videoId of videoIds) {
                 const songData = await window.api.getVideoData(videoId);
                 if (songData === undefined) continue;
-                playlistManager.add(songData);
+                tableData.add(songData);
             }
             break;
         }
         case 'form-csv': {
             const filePaths = csvInputRef.current.files;
             if (filePaths === null) return;
-            playlistManager.clear();
+            tableData.clear();
             for (const { path } of filePaths) {
                 const csvData = await window.api.csvParseSync(path, { columns: true }) as Record<string, string>[];
-                for (const songData of csvData) playlistManager.add(pick(songData, ORIGINAL_KEYS));
+                for (const songData of csvData) tableData.add(pick(songData, ORIGINAL_KEYS));
             }
             break;
         }
@@ -60,7 +60,7 @@ const FromMenu: React.FC<Props> = ({ playlistManager }) => {
     };
 
     const updateRadio: React.ChangeEventHandler = event => {
-        radioSelectedRef.current = event.target.id;
+        fromTypeRef.current = event.target.id;
         const inputs = [urlInputRef, csvInputRef];
         for (const { current } of inputs) current.disabled = !current.id.startsWith(event.target.id);
     };
@@ -73,7 +73,7 @@ const FromMenu: React.FC<Props> = ({ playlistManager }) => {
             </div>
             <div className="from-item-wrapper">
                 <label><input type="radio" name="from" id="form-csv" onChange={updateRadio} />CSVから読み込み</label>
-                <input type="file" id="form-csv-filebox" accept=".csv" ref={csvInputRef} disabled/>
+                <input type="file" id="form-csv-filebox" accept=".csv" ref={csvInputRef} disabled />
             </div>
             <div className="from-load">
                 <button id="load-btn" onClick={loadPlaylist} disabled={isloadbtnDisabled}>表示</button>
@@ -82,15 +82,15 @@ const FromMenu: React.FC<Props> = ({ playlistManager }) => {
     );
 };
 
-const EditMenu: React.FC<Props> = ({ playlistManager }) => {
+const EditMenu: React.FC<Props> = ({ tableData }) => {
     const sortTypeRef = React.useRef<HTMLSelectElement>(null!);
     const sortRevRef = React.useRef<HTMLInputElement>(null!);
     const sortList = () => {
-        playlistManager.sort(sortTypeRef.current.value, sortRevRef.current.checked);
+        tableData.sort(sortTypeRef.current.value, sortRevRef.current.checked);
     };
 
     const addSong = () => {
-        playlistManager.add({
+        tableData.add({
             thumbnail: '',
             title: '',
             userName: '',
@@ -101,7 +101,7 @@ const EditMenu: React.FC<Props> = ({ playlistManager }) => {
     return (
         <div className="edit-wrapper">
             <div className="edit-item-wrapper">
-                <button id="trim-title-btn" onClick={() => playlistManager.trimTitle()}>タイトルの自動抜き出し</button>
+                <button id="trim-title-btn" onClick={() => tableData.trimTitle()}>タイトルの自動抜き出し</button>
             </div>
             <div className="edit-item-wrapper">
                 <select id="sort-type-slc" onChange={sortList} ref={sortTypeRef}>
@@ -119,7 +119,7 @@ const EditMenu: React.FC<Props> = ({ playlistManager }) => {
     );
 };
 
-const ToMenu: React.FC<Props> = ({ playlistManager }) => {
+const ToMenu: React.FC<Props> = ({ tableData }) => {
     const highQuorityRef = React.useRef<HTMLInputElement>(null!);
 
     const outputJpeg = async () => {
@@ -133,7 +133,7 @@ const ToMenu: React.FC<Props> = ({ playlistManager }) => {
 
     const outputCsv = async () => {
         const outputData = await window.api.csvStringifySync(
-            playlistManager.playlist.map(v => pick(v, ORIGINAL_KEYS)),
+            tableData.playlist.map(v => pick(v, ORIGINAL_KEYS)),
             { header: true, quoted: true }
         );
         const blob = new Blob([outputData], { type: 'text/csv' });
