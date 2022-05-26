@@ -6,7 +6,7 @@ type Props = {
     playlistManager: PlaylistDataManager
 };
 
-const pick = <T extends Object, U extends keyof T>(from: T, keys: readonly U[]) => 
+const pick = <T extends Record<string, unknown>, U extends keyof T>(from: T, keys: readonly U[]) => 
     keys.reduce((p, c) => Object.assign(p, { [c]: from[c] }), {}) as Pick<T, U>;
 
 const originalDataKeys = ['title', 'userName', 'thumbnail', 'postDate'] as const;
@@ -29,7 +29,7 @@ const ViewerMenu: React.FC<Props> = ({ playlistManager }) => {
                 const videoIds = await window.api.getListData(urlInputRef.current.value);
                 if (videoIds === undefined) {
                     setIsLoadbtnDisabled(false);
-                    await window.api.showErrorBox('URLが間違っています', 'KiiteのプレイリストのURLか、ニコニコ動画のマイリストのURLを入力してください')
+                    await window.api.showErrorBox('URLが間違っています', 'KiiteのプレイリストのURLか、ニコニコ動画のマイリストのURLを入力してください');
                     return;
                 }
                 playlistManager.clear();
@@ -97,7 +97,7 @@ const ViewerMenu: React.FC<Props> = ({ playlistManager }) => {
             userName: '',
             postDate: ''
         });
-    }
+    };
     
     return (
         <div id="viewer-menu">

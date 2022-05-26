@@ -1,4 +1,4 @@
-import path, { resolve } from 'path';
+import path from 'path';
 import { app, BrowserWindow, dialog, ipcMain } from 'electron';
 import electronPrompt from 'electron-prompt';
 import { stringifier, stringify, parser, parse } from 'csv';

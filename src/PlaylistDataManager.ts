@@ -56,7 +56,7 @@ class PlaylistDataManager {
             const [fromData] = newList.splice(fromIndex, 1);
             const toIndex = newList.findIndex(v => v.key === toKey);
             if (toIndex === -1) return list;
-            const insertedList = [...newList.slice(0, toIndex), fromData, ...newList.slice(toIndex)]
+            const insertedList = [...newList.slice(0, toIndex), fromData, ...newList.slice(toIndex)];
             return insertedList;
         });
     }
@@ -79,13 +79,13 @@ class PlaylistDataManager {
 
     sort (type: string, isReverse: boolean) {
         const rev = isReverse ? -1 : 1;
-        const sortFunc = <T>(convFunc: (from: T) => any) => (fromA: T, fromB: T) => {
+        const sortFunc = <T>(convFunc: (from: T) => number | string | undefined) => (fromA: T, fromB: T) => {
             const [a, b] = [convFunc(fromA), convFunc(fromB)];
             if (a === undefined || b === undefined) return 1;
             if (a === b) return 0;
             if (a < b) return -1 * rev;
             return 1 * rev;
-        }
+        };
         switch (type) {
             case 'key':
             case 'title':
@@ -98,7 +98,7 @@ class PlaylistDataManager {
             case 'postDate': {
                 this.setPlaylist(list => [...list].sort(
                     sortFunc(v => v.postDate && Date.parse(v.postDate))
-                ))
+                ));
                 break;
             }
         }

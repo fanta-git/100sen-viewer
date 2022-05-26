@@ -14,7 +14,7 @@ const RootDiv: React.FC = () => {
             <PlaylistTable playlistManager={listManager} />
         </>
     );
-}
+};
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);

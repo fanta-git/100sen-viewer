@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { originalData, SongDataForTable } from '../types';
+import { originalData } from '../types';
 
 
 const CALL_API_INTERVAL = 10;

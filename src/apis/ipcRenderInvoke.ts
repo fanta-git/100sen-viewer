@@ -1,7 +1,6 @@
 import { ipcRenderer } from "electron";
 import type { stringifier, parser } from "csv";
 import type electronPromptT from 'electron-prompt';
-import type { dialog } from 'electron';
 
 type eleProT = (...args: Parameters<typeof electronPromptT>) => Promise<string>;
 const electronPrompt: eleProT = (...args) => ipcRenderer.invoke('electronPrompt', ...args);
