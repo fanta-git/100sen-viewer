@@ -1,13 +1,12 @@
-module.exports = {
+{
     "env": {
         "browser": true,
         "es2021": true,
         "node": true
     },
     "extends": [
-        "eslint:recommended",
         "plugin:react/recommended",
-        "plugin:@typescript-eslint/recommended"
+        "standard"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -23,6 +22,7 @@ module.exports = {
     ],
     "rules": {
         "@typescript-eslint/no-non-null-assertion": "off",
-        "semi": ["warn", "always"]
+        "semi": ["warn", "always"],
+        "indent": ["error", 4]
     }
-};
+}

@@ -15,7 +15,7 @@ type ContentsOwner = {
 };
 
 type SuccessPlaylistContents = {
-    status: "succeeded";
+    status: 'succeeded';
     list_id: string;
     list_title: string;
     created_at: string;
@@ -26,7 +26,7 @@ type SuccessPlaylistContents = {
 };
 
 type FailedPlaylistContents = {
-    status: "failed";
+    status: 'failed';
     error: {
         message: string;
     };

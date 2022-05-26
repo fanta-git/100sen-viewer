@@ -1,5 +1,5 @@
-import { ipcRenderer } from "electron";
-import type { stringifier, parser } from "csv";
+import { ipcRenderer } from 'electron';
+import type { stringifier, parser } from 'csv';
 import type electronPromptT from 'electron-prompt';
 
 type eleProT = (...args: Parameters<typeof electronPromptT>) => Promise<string>;

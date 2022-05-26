@@ -71,15 +71,15 @@ const PlaylistTable: React.FC<Props> = ({ playlistManager }) => {
         };
 
         items.push(
-            <div className="song" key={videoData.key} draggable='true' {...dragEvents}>
-                <img className="thumbnail" onClick={updateContent} src={videoData.thumbnail} draggable="false" onError={e => e.currentTarget.src = noDataImage} />
-                <div className="title" onClick={updateContent}>{videoData.title}</div>
-                <div className="user-name" onClick={updateContent}>{videoData.userName}</div>
+            <div className='song' key={videoData.key} draggable='true' {...dragEvents}>
+                <img className='thumbnail' onClick={updateContent} src={videoData.thumbnail} draggable='false' onError={e => { e.currentTarget.src = noDataImage; }} />
+                <div className='title' onClick={updateContent}>{videoData.title}</div>
+                <div className='user-name' onClick={updateContent}>{videoData.userName}</div>
             </div>
         );
     }
 
-    return <div id="listdata-table">{items}</div>;
+    return <div id='listdata-table'>{items}</div>;
 };
 
 export default PlaylistTable;

@@ -1,7 +1,6 @@
 import fetch from 'node-fetch';
 import { originalData } from '../types';
 
-
 const CALL_API_INTERVAL = 10;
 const API_URL = 'https://ext.nicovideo.jp/api/getthumbinfo/';
 
@@ -20,7 +19,7 @@ const getVideoData = async (videoId: string) => {
         thumbnail: resReader('thumbnail_url'),
         postDate: resReader('first_retrieve')
     };
-    
+
     await timer(CALL_API_INTERVAL);
 
     return ret;

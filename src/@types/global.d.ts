@@ -1,7 +1,7 @@
-import preload from "../preload";
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-var */
+import preload from '../preload';
 
 declare global {
-    interface Window {
-        api: typeof preload;
-    }
+    var api: typeof preload;
 }

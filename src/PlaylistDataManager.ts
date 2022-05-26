@@ -1,5 +1,5 @@
-import React from "react";
-import { originalData, SongDataForTable } from "./types";
+import React from 'react';
+import { originalData, SongDataForTable } from './types';
 
 class PlaylistDataManager {
     playlist: SongDataForTable[];
@@ -16,7 +16,7 @@ class PlaylistDataManager {
         this.key.current = 0;
     }
 
-    deleat(key: number) {
+    deleat (key: number) {
         this.setPlaylist(list => {
             const newList = [...list];
             const index = newList.findIndex(v => v.key === key);
@@ -33,7 +33,7 @@ class PlaylistDataManager {
             ...list,
             {
                 ...songData,
-                key: key,
+                key,
                 original: { ...songData }
             }
         ]);
@@ -69,7 +69,7 @@ class PlaylistDataManager {
             /(」|｣|』).*/,
             /(\/|／).*/,
             /.*-/,
-            /(feat|ft) ?\..*/,
+            /(feat|ft) ?\..*/
         ];
         for (const item of newData) {
             const trimedTitle = regs.reduce((tit, reg) => tit.replace(reg, ''), item.title ?? '').trim();
@@ -87,20 +87,20 @@ class PlaylistDataManager {
             return 1 * rev;
         };
         switch (type) {
-            case 'key':
-            case 'title':
-            case 'userName':{
-                this.setPlaylist(list => [...list].sort(
-                    sortFunc(v => v[type])
-                ));
-                break;
-            }
-            case 'postDate': {
-                this.setPlaylist(list => [...list].sort(
-                    sortFunc(v => v.postDate && Date.parse(v.postDate))
-                ));
-                break;
-            }
+        case 'key':
+        case 'title':
+        case 'userName':{
+            this.setPlaylist(list => [...list].sort(
+                sortFunc(v => v[type])
+            ));
+            break;
+        }
+        case 'postDate': {
+            this.setPlaylist(list => [...list].sort(
+                sortFunc(v => v.postDate && Date.parse(v.postDate))
+            ));
+            break;
+        }
         }
     }
 }
