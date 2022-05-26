@@ -50,15 +50,15 @@ class TableData {
         });
     }
 
-    move (fromKey: number, toKey: number) {
+    move (fromKey: number, toKey: number, isRight: boolean) {
         this.setPlaylist(list => {
+            const insertArray = <T>(array: T[], data: T, index: number) => [...array.slice(0, index), data, ...array.slice(index)];
             const newList = [...list];
             const fromIndex = newList.findIndex(v => v.key === fromKey);
             const [fromData] = newList.splice(fromIndex, 1);
             const toIndex = newList.findIndex(v => v.key === toKey);
             if (toIndex === -1) return list;
-            const insertedList = [...newList.slice(0, toIndex), fromData, ...newList.slice(toIndex)];
-            return insertedList;
+            return insertArray(newList, fromData, toIndex + (isRight ? 1 : 0));
         });
     }
 

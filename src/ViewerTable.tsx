@@ -59,7 +59,7 @@ const ViewerTable: React.FC<Props> = ({ tableData }) => {
                 e.stopPropagation();
                 e.preventDefault();
                 const isRight = e.currentTarget.classList.contains(DRAG_OVER_CLASSES.right);
-                tableData.move(dropKey, videoData.key + (isRight ? 1 : 0));
+                tableData.move(dropKey, videoData.key, isRight);
                 e.currentTarget.classList.remove(DRAG_OVER_CLASSES.left, DRAG_OVER_CLASSES.right);
                 dropKey = -1;
             },
