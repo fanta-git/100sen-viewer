@@ -10,8 +10,23 @@ type Props = {
 const pick = <T extends Object, U extends keyof T>(from: T, keys: readonly U[]) => 
     keys.reduce((p, c) => Object.assign(p, { [c]: from[c] }), {}) as Pick<T, U>;
 
+const PNG_SCALE = 2;
 const originalDataKeys = ['title', 'userName', 'thumbnail', 'postDate'] as const;
-
+// function downloadAsImg (el, filename, scale){
+//     if (scale !== undefined) var props = {
+//         width: el.clientWidth_scale,
+//         height: el.clientHeight_scale,
+//         style: {
+//             'transform': `scale('${scale}')`,
+//             'transform-origin': 'top left'
+//         }
+//     }
+//     domtoimage.toBlob(el, props).then(function (blob) {
+//         window.saveAs(blob, filename === undefined ? 'image.png' : filename);
+//     });
+// }
+    
+    
 const ViewerMenu: React.FC<Props> = ({ playlistManager }) => {
     const urlInputRef = React.useRef<HTMLInputElement>(null!);
     const csvInputRef = React.useRef<HTMLInputElement>(null!);
@@ -56,8 +71,10 @@ const ViewerMenu: React.FC<Props> = ({ playlistManager }) => {
     const outputJpeg = async () => {
         const songTable = document.getElementById('listdata-table');
         if (songTable === null) return;
-        const imageUrl = await domtoimage.toJpeg(songTable);
-        saveFile(imageUrl, '100sen');
+        songTable.classList.add('double');
+        const imageUrl = await domtoimage.toBlob(songTable);
+        songTable.classList.remove('double');
+        saveFile(URL.createObjectURL(imageUrl), '100sen');
     };
 
     const outputCsv = async () => {
