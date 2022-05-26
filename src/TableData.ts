@@ -22,7 +22,6 @@ class TableData {
             const index = newList.findIndex(v => v.key === key);
             if (index === -1) return list;
             newList.splice(index, 1);
-            this.key.current -= 1;
             return newList;
         });
     }

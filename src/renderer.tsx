@@ -6,12 +6,12 @@ import ViewerMenu from './ViewerMenu';
 import TableData from './TableData';
 
 const RootDiv: React.FC = () => {
-    const listManager = new TableData();
+    const tableData = new TableData();
 
     return (
         <>
-            <ViewerMenu tableData={listManager} />
-            <ViewerTable tableData={listManager} />
+            <ViewerMenu tableData={tableData} />
+            <ViewerTable tableData={tableData} />
         </>
     );
 };
