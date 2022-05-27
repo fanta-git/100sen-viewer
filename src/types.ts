@@ -55,7 +55,8 @@ export type originalData = {
     videoId?: string
 };
 
-export type SongDataForTable = originalData & {
+export type SongDataForTable = {
     key: number,
-    original: originalData
+    original: originalData,
+    current: originalData
 }

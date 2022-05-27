@@ -14,7 +14,7 @@ const EditItem: React.FC<Props> = ({ tableData, selectedItem, setSelectedItem })
     const [updateInput, setUpdateInput] = React.useState<string>('');
 
     React.useEffect(
-        () => setUpdateInput(tableData.getData(selectedItem)?.[updateTarget] ?? ''),
+        () => setUpdateInput(tableData.getData(selectedItem)?.current[updateTarget] ?? ''),
         [updateTarget, selectedItem]
     );
 

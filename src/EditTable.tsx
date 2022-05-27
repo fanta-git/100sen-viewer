@@ -135,7 +135,7 @@ const ToMenu: React.FC<Props> = ({ tableData }) => {
 
     const outputCsv = async () => {
         const outputData = await window.api.csvStringifySync(
-            tableData.playlist.map(v => pick(v, ORIGINAL_KEYS)),
+            tableData.playlist.map(v => v.current),
             { header: true, quoted: true }
         );
         const blob = new Blob([outputData], { type: 'text/csv' });

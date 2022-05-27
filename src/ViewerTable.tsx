@@ -14,15 +14,15 @@ const DRAG_OVER_CLASSES = { left: 'drag-over-left', right: 'drag-over-right' };
 const ViewerTable: React.FC<Props> = ({ tableData, itemSelect }) => {
     const items: React.ReactElement[] = [];
     let dropKey = -1;
-    for (const videoData of tableData.playlist) {
+    for (const { key, current } of tableData.playlist) {
         const click = () => {
-            itemSelect(videoData.key);
+            itemSelect(key);
         };
 
         const dragEvents: Record<string, DragEventHandler<HTMLDivElement>> = {
             onDragStart: e => {
                 e.dataTransfer.effectAllowed = 'move';
-                dropKey = videoData.key;
+                dropKey = key;
             },
             onDragOver: e => {
                 e.stopPropagation();
@@ -44,7 +44,7 @@ const ViewerTable: React.FC<Props> = ({ tableData, itemSelect }) => {
                 e.stopPropagation();
                 e.preventDefault();
                 const isRight = e.currentTarget.classList.contains(DRAG_OVER_CLASSES.right);
-                tableData.move(dropKey, videoData.key, isRight);
+                tableData.move(dropKey, key, isRight);
                 e.currentTarget.classList.remove(DRAG_OVER_CLASSES.left, DRAG_OVER_CLASSES.right);
                 dropKey = -1;
             },
@@ -56,10 +56,10 @@ const ViewerTable: React.FC<Props> = ({ tableData, itemSelect }) => {
         };
 
         items.push(
-            <div className='song' key={videoData.key} onClick={click} draggable='true' {...dragEvents}>
-                <img className='thumbnail' src={videoData.thumbnail} draggable='false' onError={e => { e.currentTarget.src = noDataImage; }} />
-                <div className='title'>{videoData.title}</div>
-                <div className='user-name'>{videoData.userName}</div>
+            <div className='song' key={key} onClick={click} draggable='true' {...dragEvents}>
+                <img className='thumbnail' src={current.thumbnail} draggable='false' onError={e => { e.currentTarget.src = noDataImage; }} />
+                <div className='title'>{current.title}</div>
+                <div className='user-name'>{current.userName}</div>
             </div>
         );
     }

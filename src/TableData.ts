@@ -33,12 +33,12 @@ class TableData {
     add (songData: originalData) {
         const key = this.key;
         this.setPlaylist(list => {
-            if (songData.videoId && list.some(v => v.videoId === songData.videoId)) return list;
+            if (songData.videoId && list.some(v => v.current.videoId === songData.videoId)) return list;
             return ([
                 ...list,
                 {
-                    ...songData,
                     key: key.current++,
+                    current: { ...songData },
                     original: { ...songData }
                 }
             ]);
@@ -48,8 +48,9 @@ class TableData {
     overWrite (key: number, data: Partial<originalData>) {
         this.setPlaylist(list => {
             const newlist = [...list];
-            const targetIndex = newlist.findIndex(v => v.key === key);
-            newlist[targetIndex] = { ...newlist[targetIndex], ...data };
+            const target = newlist.find(v => v.key === key);
+            if (target === undefined) return list;
+            Object.assign(target.current, data);
             return newlist;
         });
     }
@@ -77,7 +78,7 @@ class TableData {
             /(feat|ft) ?\..*/
         ];
         for (const item of newData) {
-            const trimedTitle = regs.reduce((tit, reg) => tit.replace(reg, ''), item.title ?? '').trim();
+            const trimedTitle = regs.reduce((tit, reg) => tit.replace(reg, ''), item.current.title ?? '').trim();
             this.overWrite(item.key, { title: trimedTitle });
         }
     }
@@ -92,17 +93,22 @@ class TableData {
             return 1 * rev;
         };
         switch (type) {
-        case 'key':
+        case 'key': {
+            this.setPlaylist(list => [...list].sort(
+                sortFunc(v => v.key)
+            ));
+            break;
+        }
         case 'title':
         case 'userName':{
             this.setPlaylist(list => [...list].sort(
-                sortFunc(v => v[type])
+                sortFunc(v => v.current[type])
             ));
             break;
         }
         case 'postDate': {
             this.setPlaylist(list => [...list].sort(
-                sortFunc(v => v.postDate && Date.parse(v.postDate))
+                sortFunc(v => v.current.postDate && Date.parse(v.current.postDate))
             ));
             break;
         }
