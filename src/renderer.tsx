@@ -2,16 +2,24 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 
 import ViewerTable from './ViewerTable';
-import ViewerMenu from './ViewerMenu';
+import EditTable from './EditTable';
 import TableData from './TableData';
+import EditItem from './EditItem';
 
 const RootDiv: React.FC = () => {
     const tableData = new TableData();
+    const [selectedItem, setSelectedItem] = React.useState<number>(-1);
 
     return (
         <>
-            <ViewerMenu tableData={tableData} />
-            <ViewerTable tableData={tableData} />
+            <div id="viewer-menu">
+                {
+                    selectedItem < 0
+                        ? <EditTable tableData={tableData} />
+                        : <EditItem tableData={tableData} selectedItem={selectedItem} setSelectedItem={setSelectedItem} />
+                }
+            </div>
+            <ViewerTable tableData={tableData} itemSelect={setSelectedItem} />
         </>
     );
 };

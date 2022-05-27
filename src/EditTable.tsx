@@ -11,9 +11,9 @@ const pick = <T extends Record<string, unknown>, U extends keyof T>(from: T, key
 
 const ORIGINAL_KEYS = ['title', 'userName', 'thumbnail', 'postDate', 'videoId'] as const;
 
-const ViewerMenu: React.FC<Props> = ({ tableData }) => {
+const EditTable: React.FC<Props> = ({ tableData }) => {
     return (
-        <div id="viewer-menu">
+        <div id="edit-table">
             <FromMenu tableData={tableData} />
             <EditMenu tableData={tableData} />
             <ToMenu tableData={tableData} />
@@ -101,7 +101,7 @@ const EditMenu: React.FC<Props> = ({ tableData }) => {
     };
 
     return (
-        <div className="edit-wrapper">
+        <div id="edit-wrapper">
             <div className="edit-item-wrapper">
                 <button id="trim-title-btn" onClick={() => tableData.trimTitle()}>タイトルの自動抜き出し</button>
             </div>
@@ -151,7 +151,7 @@ const ToMenu: React.FC<Props> = ({ tableData }) => {
     };
 
     return (
-        <div className="to-wrapper">
+        <div id="to-wrapper">
             <div className="to-item-wrapper">
                 <button id="output-jpeg-btn" onClick={outputCsv}>CSVファイルとして出力</button>
             </div>
@@ -165,4 +165,4 @@ const ToMenu: React.FC<Props> = ({ tableData }) => {
     );
 };
 
-export default ViewerMenu;
+export default EditTable;
