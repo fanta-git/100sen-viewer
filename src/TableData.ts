@@ -11,6 +11,10 @@ class TableData {
         this.key = React.useRef(0);
     }
 
+    getData (key: number) {
+        return this.playlist.find(v => v.key === key);
+    }
+
     clear () {
         this.setPlaylist([]);
         this.key.current = 0;

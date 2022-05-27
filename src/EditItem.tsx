@@ -9,11 +9,14 @@ type Props = {
 
 const UPDATE_TARGET_ALL = [['thumbnail', 'サムネ'], ['title', 'タイトル'], ['userName', '投稿者名']] as const;
 
-const EditItem: React.FC<Props> = ({ tableData, selectedItem, setSelectedItem}) => {
+const EditItem: React.FC<Props> = ({ tableData, selectedItem, setSelectedItem }) => {
     const [updateTarget, setUpdateTarget] = React.useState<typeof UPDATE_TARGET_ALL[number][0]>('thumbnail');
     const [updateInput, setUpdateInput] = React.useState<string>('');
 
-    React.useEffect(() => setUpdateInput(tableData.playlist[selectedItem][updateTarget] ?? ''));
+    React.useEffect(
+        () => setUpdateInput(tableData.getData(selectedItem)?.[updateTarget] ?? ''),
+        [updateTarget, selectedItem]
+    );
 
     const updateInputChange: React.ChangeEventHandler<HTMLInputElement> = e => {
         const newInput = e.target.value;
@@ -22,7 +25,7 @@ const EditItem: React.FC<Props> = ({ tableData, selectedItem, setSelectedItem}) 
     };
 
     return (
-        <div className="edit-item">
+        <div id="edit-item" className="viewer-menu">
             <div id="update-item">
                 <div className="item-wrapper">
                     {

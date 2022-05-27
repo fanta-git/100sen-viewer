@@ -13,7 +13,7 @@ const ORIGINAL_KEYS = ['title', 'userName', 'thumbnail', 'postDate', 'videoId'] 
 
 const EditTable: React.FC<Props> = ({ tableData }) => {
     return (
-        <div id="edit-table">
+        <div id="edit-table" className="viewer-menu">
             <FromMenu tableData={tableData} />
             <EditMenu tableData={tableData} />
             <ToMenu tableData={tableData} />
