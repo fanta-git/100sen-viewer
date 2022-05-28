@@ -10,7 +10,7 @@ type Props = {
 const UPDATE_TARGET_ALL = [['thumbnail', 'サムネ'], ['title', 'タイトル'], ['userName', '投稿者名']] as const;
 
 const EditItem: React.FC<Props> = ({ tableData, selectedItem, setSelectedItem }) => {
-    const [updateTarget, setUpdateTarget] = React.useState<typeof UPDATE_TARGET_ALL[number][0]>('thumbnail');
+    const [updateTarget, setUpdateTarget] = React.useState<typeof UPDATE_TARGET_ALL[number][0]>('title');
     const [updateInput, setUpdateInput] = React.useState<string>('');
 
     React.useEffect(
@@ -18,10 +18,9 @@ const EditItem: React.FC<Props> = ({ tableData, selectedItem, setSelectedItem })
         [updateTarget, selectedItem]
     );
 
-    const updateInputChange: React.ChangeEventHandler<HTMLInputElement> = e => {
-        const newInput = e.target.value;
-        setUpdateInput(newInput);
-        tableData.overWrite(selectedItem, { [updateTarget]: newInput });
+    const updateTableData = (input: string) => {
+        setUpdateInput(input);
+        tableData.overWrite(selectedItem, { [updateTarget]: input });
     };
 
     return (
@@ -38,9 +37,10 @@ const EditItem: React.FC<Props> = ({ tableData, selectedItem, setSelectedItem })
                     }
                 </div>
                 <div className="item-wrapper">
-                    <input type="text" id="update-input" value={updateInput} onChange={updateInputChange} />
+                    <input type="text" id="update-input" value={updateInput} onChange={e => updateTableData(e.target.value)} />
                 </div>
                 <button onClick={() => setSelectedItem(-1)}>選択解除</button>
+                <button onClick={() => updateTableData(tableData.getData(selectedItem)?.original[updateTarget] ?? '')}>読み込み時のデータに戻す</button>
             </div>
         </div>
     );
