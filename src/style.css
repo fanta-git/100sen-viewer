@@ -33,6 +33,24 @@
     width: 320px;
 }
 
+#edit-item {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+}
+
+#update-target {
+    margin-right: 0.7em;
+}
+
+#update-input {
+    resize: none;
+    height: 3.2em;
+}
+
+.char-size {
+    width: 4em;
+}
+
 #listdata-table {
     background-color: white;
     width: 1024px;
@@ -84,6 +102,7 @@
     text-align: center;
     align-items: center;
     justify-content: center;
+    white-space: pre-line;
 }
 
 .title {
