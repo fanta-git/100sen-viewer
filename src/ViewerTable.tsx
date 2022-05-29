@@ -15,10 +15,6 @@ const ViewerTable: React.FC<Props> = ({ tableData, itemSelect }) => {
     const items: React.ReactElement[] = [];
     let dropKey = -1;
     for (const { key, current } of tableData.playlist) {
-        const click = () => {
-            itemSelect(key);
-        };
-
         const dragEvents: Record<string, DragEventHandler<HTMLDivElement>> = {
             onDragStart: e => {
                 e.dataTransfer.effectAllowed = 'move';
@@ -56,10 +52,10 @@ const ViewerTable: React.FC<Props> = ({ tableData, itemSelect }) => {
         };
 
         items.push(
-            <div className='song' key={key} onClick={click} draggable='true' {...dragEvents}>
+            <div className='song' key={key} onClick={() => itemSelect(key)} draggable='true' {...dragEvents}>
                 <img className='thumbnail' src={current.thumbnail} draggable='false' onError={e => { e.currentTarget.src = noDataImage; }} />
-                <div className='title'>{current.title}</div>
-                <div className='user-name'>{current.userName}</div>
+                <div className='title' style={{ fontSize: current.titleFontSize + 'em' }}>{current.title}</div>
+                <div className='user-name' style={{ fontSize: current.userNameFontSize + 'em' }}>{current.userName}</div>
             </div>
         );
     }

@@ -92,12 +92,7 @@ const EditMenu: React.FC<Props> = ({ tableData }) => {
     };
 
     const addSong = () => {
-        tableData.add({
-            thumbnail: '',
-            title: '',
-            userName: '',
-            postDate: ''
-        });
+        tableData.add({});
     };
 
     return (
