@@ -9,7 +9,7 @@ type Props = {
 const pick = <T extends Record<string, unknown>, U extends keyof T>(from: T, keys: readonly U[]) =>
     keys.reduce((p, c) => Object.assign(p, { [c]: from[c] }), {}) as Pick<T, U>;
 
-const ORIGINAL_KEYS = ['title', 'userName', 'thumbnail', 'postDate', 'videoId'] as const;
+const ORIGINAL_KEYS = ['title', 'userName', 'thumbnail', 'postDate', 'videoId', 'backgroundColor', 'titleFontSize', 'userNameFontSize'] as const;
 
 const EditTable: React.FC<Props> = ({ tableData }) => {
     return (

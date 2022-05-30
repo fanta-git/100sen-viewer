@@ -62,7 +62,7 @@ const EditItemData: React.FC<Props> = ({ tableData, selectedItem }) => {
 const EditItemStyle: React.FC<Props> = ({ tableData, selectedItem }) => {
     const [titleFontSize, setTitleFontSize] = React.useState(tableData.getData(selectedItem)?.current.titleFontSize ?? TABLE_STYLE_DEFAULT.titleFontSize);
     const [userNameFontSize, setUserNameFontSize] = React.useState(tableData.getData(selectedItem)?.current.userNameFontSize ?? TABLE_STYLE_DEFAULT.userNameFontSize);
-    const [backGroundColor, setBackGroundColor] = React.useState(tableData.getData(selectedItem)?.current.backgroundColor ?? TABLE_STYLE_DEFAULT.backGroundColor);
+    const [backgroundColor, setBackGroundColor] = React.useState(tableData.getData(selectedItem)?.current.backgroundColor ?? TABLE_STYLE_DEFAULT.backGroundColor);
 
     React.useEffect(
         () => {
@@ -78,18 +78,31 @@ const EditItemStyle: React.FC<Props> = ({ tableData, selectedItem }) => {
         tableData.overWrite(selectedItem, { [type]: e.target.value });
     };
 
+    const applyAll: React.MouseEventHandler<HTMLButtonElement> = e => {
+        for (const key of tableData.keys()) {
+            tableData.overWrite(key, { backgroundColor, titleFontSize, userNameFontSize });
+        }
+    };
+
     return (
-        <div id="change-display">
-            <div className="item-wrapper">
-                <label>背景色<input type="color" id="background-color" value={backGroundColor} onChange={itemStyleUpdate(setBackGroundColor, 'backgroundColor')} /></label>
+        <>
+            <div id="change-display">
+                <div className="item-wrapper">
+                    <label>背景色<input type="color" id="background-color" value={backgroundColor} onChange={itemStyleUpdate(setBackGroundColor, 'backgroundColor')} /></label>
+                </div>
+                <div className="item-wrapper">
+                    <label>タイトル文字サイズ<input type="number" className="char-size" step={0.1} value={titleFontSize} onChange={itemStyleUpdate(setTitleFontSize, 'titleFontSize')} /></label>
+                </div>
+                <div className="item-wrapper">
+                    <label>投稿者名文字サイズ<input type="number" className="char-size" step={0.1} value={userNameFontSize} onChange={itemStyleUpdate(setUserNameFontSize, 'userNameFontSize')} /></label>
+                </div>
             </div>
-            <div className="item-wrapper">
-                <label>タイトル文字サイズ<input type="number" className="char-size" step={0.1} value={titleFontSize} onChange={itemStyleUpdate(setTitleFontSize, 'title')} /></label>
+            <div id="style-multi">
+                <div className="item-wrapper">
+                    <button onClick={applyAll}>全てに反映</button>
+                </div>
             </div>
-            <div className="item-wrapper">
-                <label>投稿者名文字サイズ<input type="number" className="char-size" step={0.1} value={userNameFontSize} onChange={itemStyleUpdate(setUserNameFontSize, 'userName')} /></label>
-            </div>
-        </div>
+        </>
     );
 };
 

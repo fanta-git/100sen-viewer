@@ -20,6 +20,12 @@ class TableData {
         this.key.current = 0;
     }
 
+    * keys () {
+        for (const item of this.playlist) {
+            yield item.key;
+        }
+    }
+
     deleat (key: number) {
         this.setPlaylist(list => {
             const newList = [...list];
