@@ -14,7 +14,8 @@ const DRAG_OVER_CLASSES = { left: 'drag-over-left', right: 'drag-over-right' };
 const ViewerTable: React.FC<Props> = ({ tableData, itemSelect }) => {
     const items: React.ReactElement[] = [];
     let dropKey = -1;
-    for (const { key, current } of tableData.playlist) {
+    for (const key of tableData.keys()) {
+        const current = tableData.getData(key);
         const dragEvents: Record<string, DragEventHandler<HTMLDivElement>> = {
             onDragStart: e => {
                 e.dataTransfer.effectAllowed = 'move';

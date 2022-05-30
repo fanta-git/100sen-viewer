@@ -8,11 +8,6 @@ type Props = {
 };
 
 const UPDATE_TARGET_ALL = [['thumbnail', 'サムネ'], ['title', 'タイトル'], ['userName', '投稿者名']] as const;
-const TABLE_STYLE_DEFAULT = {
-    titleFontSize: '0.9',
-    userNameFontSize: '0.75',
-    backGroundColor: '#ffffff'
-};
 
 const EditItem: React.FC<Props> = (props) => {
     return (
@@ -29,7 +24,7 @@ const EditItemData: React.FC<Props> = ({ tableData, selectedItem }) => {
     const [updateInput, setUpdateInput] = React.useState<string>('');
 
     React.useEffect(
-        () => setUpdateInput(tableData.getData(selectedItem)?.current[updateTarget] ?? ''),
+        () => setUpdateInput(tableData.getData(selectedItem)[updateTarget]),
         [updateTarget, selectedItem]
     );
 
@@ -50,7 +45,7 @@ const EditItemData: React.FC<Props> = ({ tableData, selectedItem }) => {
                         ))
                     }
                 </select>
-                <button onClick={() => updateTableData(tableData.getData(selectedItem)?.original[updateTarget] ?? '')}>変更取消</button>
+                <button onClick={() => updateTableData(tableData.getData(selectedItem, true)[updateTarget])}>変更取消</button>
             </div>
             <div className="item-wrapper">
                 <textarea id="update-input" value={updateInput} onChange={e => updateTableData(e.target.value)} />
@@ -60,15 +55,17 @@ const EditItemData: React.FC<Props> = ({ tableData, selectedItem }) => {
 };
 
 const EditItemStyle: React.FC<Props> = ({ tableData, selectedItem }) => {
-    const [titleFontSize, setTitleFontSize] = React.useState(tableData.getData(selectedItem)?.current.titleFontSize ?? TABLE_STYLE_DEFAULT.titleFontSize);
-    const [userNameFontSize, setUserNameFontSize] = React.useState(tableData.getData(selectedItem)?.current.userNameFontSize ?? TABLE_STYLE_DEFAULT.userNameFontSize);
-    const [backgroundColor, setBackGroundColor] = React.useState(tableData.getData(selectedItem)?.current.backgroundColor ?? TABLE_STYLE_DEFAULT.backGroundColor);
+    const selectedItemData = tableData.getData(selectedItem);
+    const [titleFontSize, setTitleFontSize] = React.useState(selectedItemData.titleFontSize);
+    const [userNameFontSize, setUserNameFontSize] = React.useState(selectedItemData.userNameFontSize);
+    const [backgroundColor, setBackGroundColor] = React.useState(selectedItemData.backgroundColor);
 
     React.useEffect(
         () => {
-            setTitleFontSize(tableData.getData(selectedItem)?.current.titleFontSize ?? TABLE_STYLE_DEFAULT.titleFontSize);
-            setUserNameFontSize(tableData.getData(selectedItem)?.current.userNameFontSize ?? TABLE_STYLE_DEFAULT.userNameFontSize);
-            setBackGroundColor(tableData.getData(selectedItem)?.current.backgroundColor ?? TABLE_STYLE_DEFAULT.backGroundColor);
+            const newSelectedItemData = tableData.getData(selectedItem);
+            setTitleFontSize(newSelectedItemData.titleFontSize);
+            setUserNameFontSize(newSelectedItemData.userNameFontSize);
+            setBackGroundColor(newSelectedItemData.backgroundColor);
         },
         [selectedItem]
     );

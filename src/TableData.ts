@@ -2,32 +2,48 @@ import React from 'react';
 import { originalData, SongDataForTable } from './types';
 
 class TableData {
-    playlist: SongDataForTable[];
-    setPlaylist: React.Dispatch<React.SetStateAction<SongDataForTable[]>>;
-    key: React.MutableRefObject<number>;
+    #playlist: SongDataForTable[];
+    #setPlaylist: React.Dispatch<React.SetStateAction<SongDataForTable[]>>;
+    #key: React.MutableRefObject<number>;
+
+    static TABLEDATA_DEFAULT: Required<originalData> = {
+        title: '',
+        userName: '',
+        thumbnail: '',
+        videoId: '',
+        postDate: '',
+        titleFontSize: '0.9',
+        userNameFontSize: '0.75',
+        backgroundColor: '#ffffff'
+    };
 
     constructor () {
-        [this.playlist, this.setPlaylist] = React.useState<SongDataForTable[]>([]);
-        this.key = React.useRef(0);
+        [this.#playlist, this.#setPlaylist] = React.useState<SongDataForTable[]>([]);
+        this.#key = React.useRef(0);
     }
 
-    getData (key: number) {
-        return this.playlist.find(v => v.key === key);
+    getPlaylist (isOriginal: boolean = false) {
+        return this.#playlist.map(v => v[isOriginal ? 'original' : 'current']);
+    }
+
+    getData (key: number, isOriginal: boolean = false) {
+        const findedData = this.#playlist.find(v => v.key === key)?.[isOriginal ? 'original' : 'current'];
+        return { ...TableData.TABLEDATA_DEFAULT, ...findedData };
     }
 
     clear () {
-        this.setPlaylist([]);
-        this.key.current = 0;
+        this.#setPlaylist([]);
+        this.#key.current = 0;
     }
 
     * keys () {
-        for (const item of this.playlist) {
+        for (const item of this.#playlist) {
             yield item.key;
         }
     }
 
     deleat (key: number) {
-        this.setPlaylist(list => {
+        this.#setPlaylist(list => {
             const newList = [...list];
             const index = newList.findIndex(v => v.key === key);
             if (index === -1) return list;
@@ -37,8 +53,8 @@ class TableData {
     }
 
     add (songData: originalData) {
-        const key = this.key;
-        this.setPlaylist(list => {
+        const key = this.#key;
+        this.#setPlaylist(list => {
             if (songData.videoId && list.some(v => v.current.videoId === songData.videoId)) return list;
             return ([
                 ...list,
@@ -52,7 +68,7 @@ class TableData {
     }
 
     overWrite (key: number, data: Partial<originalData>) {
-        this.setPlaylist(list => {
+        this.#setPlaylist(list => {
             const newlist = [...list];
             const target = newlist.find(v => v.key === key);
             if (target === undefined) return list;
@@ -62,7 +78,7 @@ class TableData {
     }
 
     move (fromKey: number, toKey: number, isRight: boolean) {
-        this.setPlaylist(list => {
+        this.#setPlaylist(list => {
             const insertArray = <T>(array: T[], data: T, index: number) => [...array.slice(0, index), data, ...array.slice(index)];
             const newList = [...list];
             const fromIndex = newList.findIndex(v => v.key === fromKey);
@@ -74,7 +90,7 @@ class TableData {
     }
 
     trimTitle () {
-        const newData = [...this.playlist];
+        const newData = [...this.#playlist];
         const regs: RegExp[] = [
             /【.*?】|\[.*?\]/g,
             /.*(「|｢|『)/,
@@ -100,20 +116,20 @@ class TableData {
         };
         switch (type) {
         case 'key': {
-            this.setPlaylist(list => [...list].sort(
+            this.#setPlaylist(list => [...list].sort(
                 sortFunc(v => v.key)
             ));
             break;
         }
         case 'title':
         case 'userName':{
-            this.setPlaylist(list => [...list].sort(
+            this.#setPlaylist(list => [...list].sort(
                 sortFunc(v => v.current[type])
             ));
             break;
         }
         case 'postDate': {
-            this.setPlaylist(list => [...list].sort(
+            this.#setPlaylist(list => [...list].sort(
                 sortFunc(v => v.current.postDate && Date.parse(v.current.postDate))
             ));
             break;
