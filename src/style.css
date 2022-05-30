@@ -1,16 +1,54 @@
 #root {
+    height: calc(100vh - 16px);
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+
+#root > * {
     margin: auto;
 }
 
-#viewer-menu {
+.viewer-menu {
     border: 1px solid black;
-    width: calc(1024px - 20px);
-    margin-bottom: 10px;
     padding: 10px;
+    width: calc(1024px + -20px);
+    height: 5em;
+}
+
+#edit-table {
+    display: grid;
+    grid-template-columns: 520px 1fr 180px;
+}
+
+#from-wrapper {
+    grid-column: 1 / 2;
+}
+
+#to-wrapper {
+    grid-column: 3 / 4;
 }
 
 #from-url-inputbox {
     width: 320px;
+}
+
+#edit-item {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+#update-target {
+    margin-right: 0.7em;
+}
+
+#update-input {
+    resize: none;
+    height: 3.2em;
+}
+
+.char-size {
+    width: 4em;
 }
 
 #listdata-table {
@@ -18,6 +56,14 @@
     width: 1024px;
     display: grid;
     grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: max-content;
+    overflow: hidden scroll;
+    padding-right: 2px;
+    flex: 1;
+}
+
+#listdata-table::-webkit-scrollbar {
+    display: none;
 }
 
 #listdata-table.double {
@@ -27,7 +73,8 @@
 
 .song {
     width: calc(100% + 2px);
-    height: calc(100% + 2px);
+    height: fit-content;
+    margin-bottom: -2px;
     border: 2px solid black;
     box-sizing: border-box;
 }
@@ -55,6 +102,7 @@
     text-align: center;
     align-items: center;
     justify-content: center;
+    white-space: pre-line;
 }
 
 .title {
@@ -67,17 +115,4 @@
     height: auto;
     font-size: 0.75em;
     aspect-ratio: 3 / 1;
-}
-
-div#viewer-menu {
-    display: grid;
-    grid-template-columns: 520px 1fr 180px;
-}
-
-div#from-wrapper {
-    grid-column: 1 / 2;
-}
-
-.to-wrapper {
-    grid-column: 3 / 4;
 }

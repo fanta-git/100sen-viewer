@@ -52,10 +52,14 @@ export type originalData = {
     userName?: string,
     thumbnail?: string,
     postDate?: string,
-    videoId?: string
+    videoId?: string,
+    titleFontSize?: string,
+    userNameFontSize?: string,
+    backgroundColor?: string
 };
 
-export type SongDataForTable = originalData & {
+export type SongDataForTable = {
     key: number,
-    original: originalData
+    original: originalData,
+    current: originalData
 }

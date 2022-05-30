@@ -9,11 +9,11 @@ type Props = {
 const pick = <T extends Record<string, unknown>, U extends keyof T>(from: T, keys: readonly U[]) =>
     keys.reduce((p, c) => Object.assign(p, { [c]: from[c] }), {}) as Pick<T, U>;
 
-const ORIGINAL_KEYS = ['title', 'userName', 'thumbnail', 'postDate', 'videoId'] as const;
+const ORIGINAL_KEYS = ['title', 'userName', 'thumbnail', 'postDate', 'videoId', 'backgroundColor', 'titleFontSize', 'userNameFontSize'] as const;
 
-const ViewerMenu: React.FC<Props> = ({ tableData }) => {
+const EditTable: React.FC<Props> = ({ tableData }) => {
     return (
-        <div id="viewer-menu">
+        <div id="edit-table" className="viewer-menu">
             <FromMenu tableData={tableData} />
             <EditMenu tableData={tableData} />
             <ToMenu tableData={tableData} />
@@ -92,16 +92,11 @@ const EditMenu: React.FC<Props> = ({ tableData }) => {
     };
 
     const addSong = () => {
-        tableData.add({
-            thumbnail: '',
-            title: '',
-            userName: '',
-            postDate: ''
-        });
+        tableData.add({});
     };
 
     return (
-        <div className="edit-wrapper">
+        <div id="edit-wrapper">
             <div className="edit-item-wrapper">
                 <button id="trim-title-btn" onClick={() => tableData.trimTitle()}>タイトルの自動抜き出し</button>
             </div>
@@ -135,7 +130,7 @@ const ToMenu: React.FC<Props> = ({ tableData }) => {
 
     const outputCsv = async () => {
         const outputData = await window.api.csvStringifySync(
-            tableData.playlist.map(v => pick(v, ORIGINAL_KEYS)),
+            tableData.getPlaylist(),
             { header: true, quoted: true }
         );
         const blob = new Blob([outputData], { type: 'text/csv' });
@@ -151,7 +146,7 @@ const ToMenu: React.FC<Props> = ({ tableData }) => {
     };
 
     return (
-        <div className="to-wrapper">
+        <div id="to-wrapper">
             <div className="to-item-wrapper">
                 <button id="output-jpeg-btn" onClick={outputCsv}>CSVファイルとして出力</button>
             </div>
@@ -165,4 +160,4 @@ const ToMenu: React.FC<Props> = ({ tableData }) => {
     );
 };
 
-export default ViewerMenu;
+export default EditTable;
