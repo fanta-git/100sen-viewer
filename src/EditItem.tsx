@@ -107,9 +107,6 @@ const EditSelector: React.FC<Props> = ({ setSelectedItem }) => {
     return (
         <div id="select-item">
             <div className="item-wrapper">
-                <label><input type="checkbox" id="multiple-selection" />複数選択</label>
-            </div>
-            <div className="item-wrapper">
                 <button onClick={() => setSelectedItem(-1)}>選択解除</button>
             </div>
         </div>
