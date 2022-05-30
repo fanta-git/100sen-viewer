@@ -52,7 +52,7 @@ const ViewerTable: React.FC<Props> = ({ tableData, itemSelect }) => {
         };
 
         items.push(
-            <div className='song' key={key} onClick={() => itemSelect(key)} draggable='true' {...dragEvents}>
+            <div className='song' key={key} onClick={() => itemSelect(key)} draggable='true' {...dragEvents} style={{ backgroundColor: current.backgroundColor }}>
                 <img className='thumbnail' src={current.thumbnail} draggable='false' onError={e => { e.currentTarget.src = noDataImage; }} />
                 <div className='title' style={{ fontSize: current.titleFontSize + 'em' }}>{current.title}</div>
                 <div className='user-name' style={{ fontSize: current.userNameFontSize + 'em' }}>{current.userName}</div>

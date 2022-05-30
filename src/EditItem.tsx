@@ -8,6 +8,11 @@ type Props = {
 };
 
 const UPDATE_TARGET_ALL = [['thumbnail', 'サムネ'], ['title', 'タイトル'], ['userName', '投稿者名']] as const;
+const TABLE_STYLE_DEFAULT = {
+    titleFontSize: '0.9',
+    userNameFontSize: '0.75',
+    backGroundColor: '#ffffff'
+};
 
 const EditItem: React.FC<Props> = (props) => {
     return (
@@ -55,27 +60,34 @@ const EditItemData: React.FC<Props> = ({ tableData, selectedItem }) => {
 };
 
 const EditItemStyle: React.FC<Props> = ({ tableData, selectedItem }) => {
-    const [titleFontSize, setTitleFontSize] = React.useState(tableData.getData(selectedItem)?.current.titleFontSize ?? '0.9');
-    const [userNameFontSize, setUserNameFontSize] = React.useState(tableData.getData(selectedItem)?.current.userNameFontSize ?? '0.75');
+    const [titleFontSize, setTitleFontSize] = React.useState(tableData.getData(selectedItem)?.current.titleFontSize ?? TABLE_STYLE_DEFAULT.titleFontSize);
+    const [userNameFontSize, setUserNameFontSize] = React.useState(tableData.getData(selectedItem)?.current.userNameFontSize ?? TABLE_STYLE_DEFAULT.userNameFontSize);
+    const [backGroundColor, setBackGroundColor] = React.useState(tableData.getData(selectedItem)?.current.backgroundColor ?? TABLE_STYLE_DEFAULT.backGroundColor);
 
     React.useEffect(
         () => {
-            setTitleFontSize(tableData.getData(selectedItem)?.current.titleFontSize ?? '0.9');
-            setUserNameFontSize(tableData.getData(selectedItem)?.current.userNameFontSize ?? '0.75');
+            setTitleFontSize(tableData.getData(selectedItem)?.current.titleFontSize ?? TABLE_STYLE_DEFAULT.titleFontSize);
+            setUserNameFontSize(tableData.getData(selectedItem)?.current.userNameFontSize ?? TABLE_STYLE_DEFAULT.userNameFontSize);
+            setBackGroundColor(tableData.getData(selectedItem)?.current.backgroundColor ?? TABLE_STYLE_DEFAULT.backGroundColor);
         },
         [selectedItem]
     );
 
+    const itemStyleUpdate = (setState: React.Dispatch<React.SetStateAction<string>>, type: string): React.ChangeEventHandler<HTMLInputElement> => e => {
+        setState(e.target.value);
+        tableData.overWrite(selectedItem, { [type]: e.target.value });
+    };
+
     return (
         <div id="change-display">
             <div className="item-wrapper">
-                <label>背景色<input type="color" id="background-color" /></label>
+                <label>背景色<input type="color" id="background-color" value={backGroundColor} onChange={itemStyleUpdate(setBackGroundColor, 'backgroundColor')} /></label>
             </div>
             <div className="item-wrapper">
-                <label>タイトル文字サイズ<input type="number" className="char-size" step={0.1} value={titleFontSize} onChange={e => { setTitleFontSize(e.target.value); tableData.overWrite(selectedItem, { titleFontSize: e.target.value }); }} /></label>
+                <label>タイトル文字サイズ<input type="number" className="char-size" step={0.1} value={titleFontSize} onChange={itemStyleUpdate(setTitleFontSize, 'title')} /></label>
             </div>
             <div className="item-wrapper">
-                <label>投稿者名文字サイズ<input type="number" className="char-size" step={0.1} value={userNameFontSize} onChange={e => setUserNameFontSize(e.target.value)} /></label>
+                <label>投稿者名文字サイズ<input type="number" className="char-size" step={0.1} value={userNameFontSize} onChange={itemStyleUpdate(setUserNameFontSize, 'userName')} /></label>
             </div>
         </div>
     );

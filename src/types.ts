@@ -54,7 +54,8 @@ export type originalData = {
     postDate?: string,
     videoId?: string,
     titleFontSize?: string,
-    userNameFontSize?: string
+    userNameFontSize?: string,
+    backgroundColor?: string
 };
 
 export type SongDataForTable = {
