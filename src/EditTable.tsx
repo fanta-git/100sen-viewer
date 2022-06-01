@@ -117,12 +117,10 @@ const EditMenu: React.FC<Props> = ({ tableData }) => {
 };
 
 const ToMenu: React.FC<Props> = ({ tableData }) => {
-    const highQuorityRef = React.useRef<HTMLInputElement>(null!);
-
     const outputJpeg = async () => {
         const songTable = document.getElementById('listdata-table');
         if (songTable === null) return;
-        if (highQuorityRef.current.checked) songTable.classList.add('double');
+        songTable.classList.add('double');
         const imageUrl = await domtoimage.toBlob(songTable);
         songTable.classList.remove('double');
         saveFile(URL.createObjectURL(imageUrl), '100sen');
@@ -152,9 +150,6 @@ const ToMenu: React.FC<Props> = ({ tableData }) => {
             </div>
             <div className="to-item-wrapper">
                 <button id="convert-btn" onClick={outputJpeg}>画像として出力</button>
-            </div>
-            <div className="to-item-wrapper">
-                <label><input type="checkbox" id="high-quality" ref={highQuorityRef} />画質を向上</label>
             </div>
         </div>
     );
