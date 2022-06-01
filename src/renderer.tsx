@@ -12,12 +12,16 @@ const RootDiv: React.FC = () => {
 
     return (
         <>
-            {
-                selectedItem < 0
-                    ? <EditTable tableData={tableData} />
-                    : <EditItem tableData={tableData} selectedItem={selectedItem} setSelectedItem={setSelectedItem} />
-            }
-            <ViewerTable tableData={tableData} itemSelect={setSelectedItem} />
+            <div id="editmenu-wrapper">
+                {
+                    selectedItem < 0
+                        ? <EditTable tableData={tableData} />
+                        : <EditItem tableData={tableData} selectedItem={selectedItem} setSelectedItem={setSelectedItem} />
+                }
+            </div>
+            <div id="table-wrapper">
+                <ViewerTable tableData={tableData} itemSelect={setSelectedItem} />
+            </div>
         </>
     );
 };

@@ -1,19 +1,21 @@
-#root {
-    height: calc(100vh - 16px);
-    display: flex;
-    flex-direction: column;
-    row-gap: 10px;
-}
-
-#root > * {
-    margin: auto;
-}
-
 .viewer-menu {
     border: 1px solid black;
     padding: 10px;
     width: calc(1024px + -20px);
     height: 5em;
+}
+
+#editmenu-wrapper {
+    position: sticky;
+    top: 0;
+    left: 0;
+    padding: 10px 0;
+    margin-top: -8px;
+}
+
+#editmenu-wrapper > * {
+    background-color: #ececec;
+    margin: auto;
 }
 
 #edit-table {
@@ -51,15 +53,18 @@
     width: 4em;
 }
 
+#table-wrapper {
+    margin: auto;
+    width: fit-content;
+}
+
 #listdata-table {
     background-color: white;
     width: 1024px;
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: max-content;
-    overflow: hidden scroll;
     padding-right: 2px;
-    flex: 1;
 }
 
 #listdata-table::-webkit-scrollbar {
