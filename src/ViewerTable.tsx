@@ -1,4 +1,4 @@
-import React, { DragEventHandler } from 'react';
+import React from 'react';
 import TableData from './TableData';
 
 import noDataImage from './assets/no_data.png';
@@ -16,7 +16,7 @@ const ViewerTable: React.FC<Props> = ({ tableData, itemSelect }) => {
     let dropKey = -1;
     for (const key of tableData.keys()) {
         const current = tableData.getData(key);
-        const dragEvents: Record<string, DragEventHandler<HTMLDivElement>> = {
+        const dragEvents: Record<string, React.DragEventHandler<HTMLDivElement>> = {
             onDragStart: e => {
                 e.dataTransfer.effectAllowed = 'move';
                 dropKey = key;

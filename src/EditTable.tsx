@@ -22,21 +22,24 @@ const EditTable: React.FC<Props> = ({ tableData }) => {
 };
 
 const FromMenu: React.FC<Props> = ({ tableData }) => {
-    const urlInputRef = React.useRef<HTMLInputElement>(null!);
-    const csvInputRef = React.useRef<HTMLInputElement>(null!);
+    const fromTypeRef = React.useRef<HTMLSelectElement>(null!);
     const isJoinSongsRef = React.useRef<HTMLInputElement>(null!);
-    const fromTypeRef = React.useRef<string>('from-url');
     const [isloadbtnDisabled, setIsLoadbtnDisabled] = React.useState(false);
 
     const loadPlaylist = async () => {
         setIsLoadbtnDisabled(true);
-        switch (fromTypeRef.current) {
+        switch (fromTypeRef.current.value) {
         case 'from-url': {
-            const videoIds = await window.api.getListData(urlInputRef.current.value);
+            const listUrl = await window.api.electronPrompt({
+                type: 'input',
+                label: 'KiiteのプレイリストかニコニコのマイリストのURLを入力してください',
+                title: 'URLからリストを読み込み'
+            });
+            if (!listUrl) break;
+            const videoIds = await window.api.getListData(listUrl);
             if (videoIds === undefined) {
-                setIsLoadbtnDisabled(false);
                 await window.api.showErrorBox('URLが間違っています', 'KiiteのプレイリストのURLか、ニコニコ動画のマイリストのURLを入力してください');
-                return;
+                break;
             }
             if (!isJoinSongsRef.current.checked) tableData.clear();
             for (const videoId of videoIds) {
@@ -46,39 +49,60 @@ const FromMenu: React.FC<Props> = ({ tableData }) => {
             }
             break;
         }
-        case 'form-csv': {
-            const filePaths = csvInputRef.current.files;
-            if (filePaths === null) return;
+        case 'from-csv': {
+            const filePaths = await window.api.showOpenDialogSync({
+                title: 'CSVからリストを読み込み',
+                message: 'このアプリで出力したCSVを選択してください',
+                filters: [
+                    { name: 'CSV', extensions: ['csv'] }
+                ]
+            });
+            if (filePaths === undefined) break;
             if (!isJoinSongsRef.current.checked) tableData.clear();
-            for (const { path } of filePaths) {
+            for (const path of filePaths) {
                 const csvData = await window.api.csvParseSync(path, { columns: true }) as Record<string, string>[];
                 for (const songData of csvData) tableData.add(pick(songData, ORIGINAL_KEYS));
             }
+            break;
+        }
+        case 'add-url': {
+            const songUrl = await window.api.electronPrompt({
+                type: 'input',
+                label: '曲のURLを入力してください',
+                title: 'URLから曲の追加'
+            });
+            if (!songUrl) break;
+            const [videoId] = songUrl.match(/(?<=https:\/\/www.nicovideo.jp\/watch\/)\w*/) ?? [];
+            if (videoId === undefined) {
+                setIsLoadbtnDisabled(false);
+                await window.api.showErrorBox('URLが間違っています', 'ニコニコ動画の動画ページのURLを入力してください');
+                return;
+            }
+            console.log(videoId);
+            const songData = await window.api.getVideoData(videoId);
+            if (songData === undefined) break;
+            tableData.add(songData);
             break;
         }
         }
         setIsLoadbtnDisabled(false);
     };
 
-    const updateRadio: React.ChangeEventHandler = event => {
-        fromTypeRef.current = event.target.id;
-        const inputs = [urlInputRef, csvInputRef];
-        for (const { current } of inputs) current.disabled = !current.id.startsWith(event.target.id);
-    };
-
     return (
         <div id="from-wrapper">
             <div className="from-item-wrapper">
-                <label><input type="radio" name="from" id="from-url" onChange={updateRadio} defaultChecked />URLから読み込み</label>
-                <input type="text" id="from-url-inputbox" ref={urlInputRef} />
-            </div>
-            <div className="from-item-wrapper">
-                <label><input type="radio" name="from" id="form-csv" onChange={updateRadio} />CSVから読み込み</label>
-                <input type="file" id="form-csv-filebox" accept=".csv" ref={csvInputRef} disabled />
+                <label>
+                    読み込みタイプ
+                    <select id="from-type" ref={fromTypeRef}>
+                        <option value="from-url">リストのURL</option>
+                        <option value="from-csv">CSVデータ</option>
+                        <option value="add-url">曲のURL</option>
+                    </select>
+                </label>
             </div>
             <div className="from-load">
                 <label><input type="checkbox" id="isJoinSongs" ref={isJoinSongsRef} />追加で読み込む</label>
-                <button id="load-btn" onClick={loadPlaylist} disabled={isloadbtnDisabled}>表示</button>
+                <button id="load-btn" onClick={loadPlaylist} disabled={isloadbtnDisabled}>読み込み</button>
             </div>
         </div>
     );

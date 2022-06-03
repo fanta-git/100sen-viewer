@@ -1,4 +1,4 @@
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, dialog } from 'electron';
 import type { stringifier, parser } from 'csv';
 import type electronPromptT from 'electron-prompt';
 
@@ -13,9 +13,12 @@ const csvParseSync: parserT = (filePath, option) => ipcRenderer.invoke('csvParse
 
 const showErrorBox = (title: string, text: string) => ipcRenderer.invoke('showErrorBox', title, text);
 
+const showOpenDialogSync = (...args: Parameters<typeof dialog.showOpenDialogSync>) => ipcRenderer.invoke('showOpenDialogSync', ...args) as Promise<ReturnType<typeof dialog.showOpenDialogSync>>;
+
 export default {
     electronPrompt,
     csvStringifySync,
     csvParseSync,
-    showErrorBox
+    showErrorBox,
+    showOpenDialogSync
 };

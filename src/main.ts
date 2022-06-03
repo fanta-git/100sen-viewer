@@ -48,4 +48,8 @@ ipcMain.handle('csvParseSync', (event, filePath: string, option: parser.Options)
     )
 ));
 
+ipcMain.handle('showOpenDialogSync', (event, ...args: Parameters<typeof dialog.showOpenDialogSync>) => {
+    return dialog.showOpenDialogSync(...args);
+});
+
 app.whenReady().then(createWindow);
