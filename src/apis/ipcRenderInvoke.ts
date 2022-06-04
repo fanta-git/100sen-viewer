@@ -1,4 +1,4 @@
-import { ipcRenderer, dialog } from 'electron';
+import { ipcRenderer, dialog, shell } from 'electron';
 import type { stringifier, parser } from 'csv';
 import type electronPromptT from 'electron-prompt';
 
@@ -15,10 +15,13 @@ const showErrorBox = (title: string, text: string) => ipcRenderer.invoke('showEr
 
 const showOpenDialogSync = (...args: Parameters<typeof dialog.showOpenDialogSync>) => ipcRenderer.invoke('showOpenDialogSync', ...args) as Promise<ReturnType<typeof dialog.showOpenDialogSync>>;
 
+const { openExternal } = shell;
+
 export default {
     electronPrompt,
     csvStringifySync,
     csvParseSync,
     showErrorBox,
-    showOpenDialogSync
+    showOpenDialogSync,
+    openExternal
 };

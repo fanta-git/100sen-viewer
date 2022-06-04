@@ -1,5 +1,6 @@
 import React from 'react';
 import TableData from './TableData';
+import { originalData } from './types';
 
 type Props = {
     tableData: TableData,
@@ -7,19 +8,26 @@ type Props = {
     setSelectedItem: React.Dispatch<React.SetStateAction<number>>
 };
 
+type ChildProps = Props & {
+    selectedItemData: originalData
+}
+
 const UPDATE_TARGET_ALL = [['thumbnail', 'サムネ'], ['title', 'タイトル'], ['userName', '投稿者名']] as const;
 
 const EditItem: React.FC<Props> = (props) => {
+    const selectedItemData = props.tableData.getData(props.selectedItem);
+
     return (
         <div id="edit-item" className="viewer-menu">
-            <EditItemData {...props} />
-            <EditItemStyle {...props} />
-            <EditSelector {...props} />
+            <EditItemData {...{ ...props, selectedItemData }} />
+            <EditItemStyle {...{ ...props, selectedItemData }} />
+            {/* <DetailItem {...{ ...props, selectedItemData }} /> */}
+            <EditSelector {...{ ...props, selectedItemData }} />
         </div>
     );
 };
 
-const EditItemData: React.FC<Props> = ({ tableData, selectedItem }) => {
+const EditItemData: React.FC<ChildProps> = ({ tableData, selectedItem }) => {
     const [updateTarget, setUpdateTarget] = React.useState<typeof UPDATE_TARGET_ALL[number][0]>('title');
     const [updateInput, setUpdateInput] = React.useState<string>('');
 
@@ -54,7 +62,7 @@ const EditItemData: React.FC<Props> = ({ tableData, selectedItem }) => {
     );
 };
 
-const EditItemStyle: React.FC<Props> = ({ tableData, selectedItem }) => {
+const EditItemStyle: React.FC<ChildProps> = ({ tableData, selectedItem }) => {
     const selectedItemData = tableData.getData(selectedItem);
     const [titleFontSize, setTitleFontSize] = React.useState(selectedItemData.titleFontSize);
     const [userNameFontSize, setUserNameFontSize] = React.useState(selectedItemData.userNameFontSize);
@@ -96,6 +104,12 @@ const EditItemStyle: React.FC<Props> = ({ tableData, selectedItem }) => {
             </div>
             <div id="style-multi">
                 <div className="item-wrapper">
+                    <button
+                        disabled={!selectedItemData.videoId}
+                        onClick={() => window.api.openExternal(`https://www.nicovideo.jp/watch/${selectedItemData.videoId}`)}
+                    >動画を開く</button>
+                </div>
+                <div className="item-wrapper">
                     <button onClick={applyAll}>全てに反映</button>
                 </div>
             </div>
@@ -103,7 +117,11 @@ const EditItemStyle: React.FC<Props> = ({ tableData, selectedItem }) => {
     );
 };
 
-const EditSelector: React.FC<Props> = ({ setSelectedItem }) => {
+const DetailItem: React.FC<ChildProps> = () => {
+    return (<></>);
+};
+
+const EditSelector: React.FC<ChildProps> = ({ setSelectedItem }) => {
     return (
         <div id="select-item">
             <div className="item-wrapper">
