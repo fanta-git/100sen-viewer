@@ -8,26 +8,37 @@ type Props = {
     setSelectedItem: React.Dispatch<React.SetStateAction<number>>
 };
 
-type ChildProps = Props & {
-    selectedItemData: originalData
-}
+type EditItemDataProps = {
+    tableData: TableData,
+    selectedItem: number,
+    selectedItemData: Required<originalData>
+};
 
-const UPDATE_TARGET_ALL = [['thumbnail', 'サムネ'], ['title', 'タイトル'], ['userName', '投稿者名']] as const;
+type UtilItemProps = {
+    tableData: TableData,
+    selectedItemData: Required<originalData>
+};
 
-const EditItem: React.FC<Props> = (props) => {
-    const selectedItemData = props.tableData.getData(props.selectedItem);
+type EditSelectorProps = {
+    setSelectedItem: React.Dispatch<React.SetStateAction<number>>
+};
+
+const UPDATE_TARGET_ALL = [['thumbnail', 'サムネ'], ['title', 'タイトル'], ['userName', '投稿者名'], ['postDate', '投稿日'], ['videoId', '動画ID']] as const;
+
+const EditItem: React.FC<Props> = ({ tableData, selectedItem, setSelectedItem }) => {
+    const selectedItemData = tableData.getData(selectedItem);
 
     return (
         <div id="edit-item" className="viewer-menu">
-            <EditItemData {...{ ...props, selectedItemData }} />
-            <EditItemStyle {...{ ...props, selectedItemData }} />
-            {/* <DetailItem {...{ ...props, selectedItemData }} /> */}
-            <EditSelector {...{ ...props, selectedItemData }} />
+            <EditItemData {...{ tableData, selectedItem, selectedItemData }} />
+            <EditItemStyle {...{ tableData, selectedItem, selectedItemData }} />
+            <UtilItem {...{ tableData, selectedItem, setSelectedItem, selectedItemData }} />
+            <EditSelector {...{ setSelectedItem }} />
         </div>
     );
 };
 
-const EditItemData: React.FC<ChildProps> = ({ tableData, selectedItem }) => {
+const EditItemData: React.FC<EditItemDataProps> = ({ tableData, selectedItem, selectedItemData }) => {
     const [updateTarget, setUpdateTarget] = React.useState<typeof UPDATE_TARGET_ALL[number][0]>('title');
     const [updateInput, setUpdateInput] = React.useState<string>('');
 
@@ -35,6 +46,11 @@ const EditItemData: React.FC<ChildProps> = ({ tableData, selectedItem }) => {
         () => setUpdateInput(tableData.getData(selectedItem)[updateTarget]),
         [updateTarget, selectedItem]
     );
+
+    const changeUpdateTarget: React.ChangeEventHandler<HTMLSelectElement> = e => {
+        setUpdateTarget(e.target.value as typeof updateTarget);
+        setUpdateInput(selectedItemData[updateTarget]);
+    };
 
     const updateTableData = (input: string) => {
         setUpdateInput(input);
@@ -44,12 +60,10 @@ const EditItemData: React.FC<ChildProps> = ({ tableData, selectedItem }) => {
     return (
         <div id="update-item">
             <div className="item-wrapper">
-                <select id="update-target" onChange={e => setUpdateTarget(e.target.value as typeof updateTarget)} value={updateTarget}>
+                <select id="update-target" onChange={changeUpdateTarget} value={updateTarget}>
                     {
                         UPDATE_TARGET_ALL.map(([name, jp], i) => (
-                            <option key={i} value={name}>
-                                {jp}
-                            </option>
+                            <option key={i} value={name}>{jp}</option>
                         ))
                     }
                 </select>
@@ -62,8 +76,7 @@ const EditItemData: React.FC<ChildProps> = ({ tableData, selectedItem }) => {
     );
 };
 
-const EditItemStyle: React.FC<ChildProps> = ({ tableData, selectedItem }) => {
-    const selectedItemData = tableData.getData(selectedItem);
+const EditItemStyle: React.FC<EditItemDataProps> = ({ tableData, selectedItem, selectedItemData }) => {
     const [titleFontSize, setTitleFontSize] = React.useState(selectedItemData.titleFontSize);
     const [userNameFontSize, setUserNameFontSize] = React.useState(selectedItemData.userNameFontSize);
     const [backgroundColor, setBackGroundColor] = React.useState(selectedItemData.backgroundColor);
@@ -83,45 +96,45 @@ const EditItemStyle: React.FC<ChildProps> = ({ tableData, selectedItem }) => {
         tableData.overWrite(selectedItem, { [type]: e.target.value });
     };
 
+    return (
+        <div id="change-display">
+            <div className="item-wrapper">
+                <label>背景色<input type="color" id="background-color" value={backgroundColor} onChange={itemStyleUpdate(setBackGroundColor, 'backgroundColor')} /></label>
+            </div>
+            <div className="item-wrapper">
+                <label>タイトル文字サイズ<input type="number" className="char-size" step={0.1} value={titleFontSize} onChange={itemStyleUpdate(setTitleFontSize, 'titleFontSize')} /></label>
+            </div>
+            <div className="item-wrapper">
+                <label>投稿者名文字サイズ<input type="number" className="char-size" step={0.1} value={userNameFontSize} onChange={itemStyleUpdate(setUserNameFontSize, 'userNameFontSize')} /></label>
+            </div>
+        </div>
+    );
+};
+
+const UtilItem: React.FC<UtilItemProps> = ({ tableData, selectedItemData }) => {
     const applyAll: React.MouseEventHandler<HTMLButtonElement> = e => {
         for (const key of tableData.keys()) {
+            const { backgroundColor, titleFontSize, userNameFontSize } = selectedItemData;
             tableData.overWrite(key, { backgroundColor, titleFontSize, userNameFontSize });
         }
     };
 
     return (
-        <>
-            <div id="change-display">
-                <div className="item-wrapper">
-                    <label>背景色<input type="color" id="background-color" value={backgroundColor} onChange={itemStyleUpdate(setBackGroundColor, 'backgroundColor')} /></label>
-                </div>
-                <div className="item-wrapper">
-                    <label>タイトル文字サイズ<input type="number" className="char-size" step={0.1} value={titleFontSize} onChange={itemStyleUpdate(setTitleFontSize, 'titleFontSize')} /></label>
-                </div>
-                <div className="item-wrapper">
-                    <label>投稿者名文字サイズ<input type="number" className="char-size" step={0.1} value={userNameFontSize} onChange={itemStyleUpdate(setUserNameFontSize, 'userNameFontSize')} /></label>
-                </div>
+        <div id="style-multi">
+            <div className="item-wrapper">
+                <button
+                    disabled={!selectedItemData.videoId}
+                    onClick={() => window.api.openExternal(`https://www.nicovideo.jp/watch/${selectedItemData.videoId}`)}
+                >動画を開く</button>
             </div>
-            <div id="style-multi">
-                <div className="item-wrapper">
-                    <button
-                        disabled={!selectedItemData.videoId}
-                        onClick={() => window.api.openExternal(`https://www.nicovideo.jp/watch/${selectedItemData.videoId}`)}
-                    >動画を開く</button>
-                </div>
-                <div className="item-wrapper">
-                    <button onClick={applyAll}>全てに反映</button>
-                </div>
+            <div className="item-wrapper">
+                <button onClick={applyAll}>全てに反映</button>
             </div>
-        </>
+        </div>
     );
 };
 
-const DetailItem: React.FC<ChildProps> = () => {
-    return (<></>);
-};
-
-const EditSelector: React.FC<ChildProps> = ({ setSelectedItem }) => {
+const EditSelector: React.FC<EditSelectorProps> = ({ setSelectedItem }) => {
     return (
         <div id="select-item">
             <div className="item-wrapper">
