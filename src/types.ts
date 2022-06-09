@@ -60,6 +60,6 @@ export type originalData = {
 
 export type SongDataForTable = {
     key: number,
-    original: originalData,
-    current: originalData
+    original: Required<originalData>,
+    current: Required<originalData>
 }

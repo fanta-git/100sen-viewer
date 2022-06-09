@@ -27,8 +27,7 @@ class TableData {
     }
 
     getData (key: number, isOriginal: boolean = false) {
-        const findedData = this.#playlist.find(v => v.key === key)?.[isOriginal ? 'original' : 'current'];
-        return { ...TableData.TABLEDATA_DEFAULT, ...findedData };
+        return this.#playlist.find(v => v.key === key)![isOriginal ? 'original' : 'current'];
     }
 
     clear () {
@@ -60,8 +59,8 @@ class TableData {
                 ...list,
                 {
                     key: key.current++,
-                    current: { ...songData },
-                    original: { ...songData }
+                    current: { ...TableData.TABLEDATA_DEFAULT, ...songData },
+                    original: { ...TableData.TABLEDATA_DEFAULT, ...songData }
                 }
             ]);
         });

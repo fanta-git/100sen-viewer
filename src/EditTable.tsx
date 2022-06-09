@@ -6,17 +6,12 @@ type Props = {
     tableData: TableData
 };
 
-const pick = <T extends Record<string, unknown>, U extends keyof T>(from: T, keys: readonly U[]) =>
-    keys.reduce((p, c) => Object.assign(p, { [c]: from[c] }), {}) as Pick<T, U>;
-
-const ORIGINAL_KEYS = ['title', 'userName', 'thumbnail', 'postDate', 'videoId', 'backgroundColor', 'titleFontSize', 'userNameFontSize'] as const;
-
-const EditTable: React.FC<Props> = ({ tableData }) => {
+const EditTable: React.FC<Props> = (props) => {
     return (
         <div id="edit-table" className="viewer-menu">
-            <FromMenu tableData={tableData} />
-            <EditMenu tableData={tableData} />
-            <ToMenu tableData={tableData} />
+            <FromMenu {...props} />
+            <EditMenu {...props} />
+            <ToMenu {...props} />
         </div>
     );
 };
@@ -61,7 +56,7 @@ const FromMenu: React.FC<Props> = ({ tableData }) => {
             if (!isJoinSongsRef.current.checked) tableData.clear();
             for (const path of filePaths) {
                 const csvData = await window.api.csvParseSync(path, { columns: true }) as Record<string, string>[];
-                for (const songData of csvData) tableData.add(pick(songData, ORIGINAL_KEYS));
+                for (const songData of csvData) tableData.add(songData);
             }
             break;
         }
@@ -78,7 +73,6 @@ const FromMenu: React.FC<Props> = ({ tableData }) => {
                 await window.api.showErrorBox('URLが間違っています', 'ニコニコ動画の動画ページのURLを入力してください');
                 return;
             }
-            console.log(videoId);
             const songData = await window.api.getVideoData(videoId);
             if (songData === undefined) break;
             tableData.add(songData);
