@@ -62,4 +62,28 @@ export type SongDataForTable = {
     key: number,
     original: Required<originalData>,
     current: Required<originalData>
-}
+};
+
+export type vocadbItemData = {
+    artistString: string,
+    createDate: string,
+    defaultName: string,
+    defaultNameLanguage: string,
+    favoritedTimes: number,
+    id: number,
+    lengthSeconds: number,
+    name: string,
+    publishDate: string,
+    pvServices: string,
+    ratingScore: number,
+    songType: string,
+    status: string,
+    version: number,
+    thumbUrl: string
+};
+
+export type vocadbReturnData = {
+    items: vocadbItemData[],
+    term: string,
+    totalCount: number
+};

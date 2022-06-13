@@ -38,7 +38,7 @@ const FromMenu: React.FC<Props> = ({ tableData }) => {
             }
             if (!isJoinSongsRef.current.checked) tableData.clear();
             for (const videoId of videoIds) {
-                const songData = await window.api.getVideoData(videoId);
+                const songData = await window.api.getVocadbData(videoId);
                 if (songData === undefined) continue;
                 tableData.add(songData);
             }
