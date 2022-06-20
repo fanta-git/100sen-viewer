@@ -20,6 +20,7 @@ type UtilItemProps = {
 };
 
 type EditSelectorProps = {
+    selectedItem: number,
     setSelectedItem: React.Dispatch<React.SetStateAction<number>>
 };
 
@@ -33,7 +34,7 @@ const EditItem: React.FC<Props> = ({ tableData, selectedItem, setSelectedItem })
             <EditItemData {...{ tableData, selectedItem, selectedItemData }} />
             <EditItemStyle {...{ tableData, selectedItem, selectedItemData }} />
             <UtilItem {...{ tableData, selectedItem, setSelectedItem, selectedItemData }} />
-            <EditSelector {...{ setSelectedItem }} />
+            <EditSelector {...{ selectedItem, setSelectedItem }} />
         </div>
     );
 };
@@ -80,6 +81,7 @@ const EditItemStyle: React.FC<EditItemDataProps> = ({ tableData, selectedItem, s
     const [titleFontSize, setTitleFontSize] = React.useState(selectedItemData.titleFontSize);
     const [userNameFontSize, setUserNameFontSize] = React.useState(selectedItemData.userNameFontSize);
     const [backgroundColor, setBackGroundColor] = React.useState(selectedItemData.backgroundColor);
+    const prevSelected = React.useRef(-1);
 
     React.useEffect(
         () => {
@@ -87,6 +89,10 @@ const EditItemStyle: React.FC<EditItemDataProps> = ({ tableData, selectedItem, s
             setTitleFontSize(newSelectedItemData.titleFontSize);
             setUserNameFontSize(newSelectedItemData.userNameFontSize);
             setBackGroundColor(newSelectedItemData.backgroundColor);
+
+            document.getElementById('item_' + prevSelected.current)?.classList.remove('selected');
+            document.getElementById('item_' + selectedItem)?.classList.add('selected');
+            prevSelected.current = selectedItem;
         },
         [selectedItem]
     );
@@ -134,7 +140,7 @@ const UtilItem: React.FC<UtilItemProps> = ({ tableData, selectedItemData }) => {
     );
 };
 
-const EditSelector: React.FC<EditSelectorProps> = ({ setSelectedItem }) => {
+const EditSelector: React.FC<EditSelectorProps> = ({ selectedItem, setSelectedItem }) => {
     return (
         <div id="select-item">
             <div className="item-wrapper">
