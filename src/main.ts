@@ -52,4 +52,8 @@ ipcMain.handle('showOpenDialogSync', (event, ...args: Parameters<typeof dialog.s
     return dialog.showOpenDialogSync(...args);
 });
 
+ipcMain.handle('showMessageBoxSync', (event, ...args: Parameters<typeof dialog.showMessageBoxSync>) => {
+    return dialog.showMessageBoxSync(...args);
+});
+
 app.whenReady().then(createWindow);
