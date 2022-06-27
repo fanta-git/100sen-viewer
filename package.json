@@ -16,11 +16,11 @@
     "mac": {
       "category": "public.app-category.utilities",
       "target": "dmg",
-      "icon": "image/icon.png"
+      "icon": "image/icon.icns"
     },
     "win": {
       "target": "nsis",
-      "icon": "build/icon.png"
+      "icon": "image/icon.ico"
     },
     "files": [
       "dist/**/*",
