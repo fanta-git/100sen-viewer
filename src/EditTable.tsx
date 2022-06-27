@@ -113,10 +113,22 @@ const EditMenu: React.FC<Props> = ({ tableData }) => {
         tableData.add({});
     };
 
+    const trimTitle = async () => {
+        const ret = await window.api.showMessageBoxSync({
+            type: 'info',
+            buttons: ['キャンセル', '実行'],
+            message: 'タイトルの自動抜き出しを実行しますか？',
+            detail: 'うまく曲名を抜き出せないことが多いので、抜き出し後確認して必要なものは手動で直す必要があります。',
+            defaultId: 1,
+            cancelId: 0
+        });
+        if (ret) tableData.trimTitle();
+    };
+
     return (
         <div id="edit-wrapper">
             <div className="edit-item-wrapper">
-                <button id="trim-title-btn" onClick={() => tableData.trimTitle()}>タイトルの自動抜き出し</button>
+                <button id="trim-title-btn" onClick={trimTitle}>タイトルの自動抜き出し</button>
             </div>
             <div className="edit-item-wrapper">
                 <select id="sort-type-slc" onChange={sortList} ref={sortTypeRef}>

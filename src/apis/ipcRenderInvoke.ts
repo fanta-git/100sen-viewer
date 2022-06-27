@@ -15,6 +15,8 @@ const showErrorBox = (title: string, text: string) => ipcRenderer.invoke('showEr
 
 const showOpenDialogSync = (...args: Parameters<typeof dialog.showOpenDialogSync>) => ipcRenderer.invoke('showOpenDialogSync', ...args) as Promise<ReturnType<typeof dialog.showOpenDialogSync>>;
 
+const showMessageBoxSync = (...args: Parameters<typeof dialog.showMessageBoxSync>) => ipcRenderer.invoke('showMessageBoxSync', ...args) as Promise<ReturnType<typeof dialog.showMessageBoxSync>>;
+
 const { openExternal } = shell;
 
 export default {
@@ -23,5 +25,6 @@ export default {
     csvParseSync,
     showErrorBox,
     showOpenDialogSync,
+    showMessageBoxSync,
     openExternal
 };
