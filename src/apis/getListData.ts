@@ -24,22 +24,20 @@ const getListData = async (url: string) => {
 const listGetters: Record<string, getAPITypes> = {
     kiite: async listId => {
         const response = await fetch(`${KIITE_END_POINT}?list_id=${listId}`);
-        if (!response.ok) return await missGetList('プレイリスト');
+        if (!response.ok) return undefined;
         const json = await response.json() as PlaylistContents;
-        if (json.status === 'failed') return await missGetList('プレイリスト');
+        if (json.status === 'failed') return undefined;
         return json.songs.map(v => v.video_id);
     },
     nico: async listId => {
         console.log(NICO_END_POINT + listId + RSS_QUERY);
         const response = await fetch(NICO_END_POINT + listId + RSS_QUERY);
-        if (!response.ok) return await missGetList('マイリスト');
+        if (!response.ok) return undefined;
         const text = await response.text();
         const xml = new DOMParser().parseFromString(text, 'text/xml');
         const linksXML = Array.from(xml.querySelectorAll('channel>item>link'));
         return linksXML.map(v => v.textContent!.match(VIDEOID_EXTRACTER)![1]);
     }
 };
-
-const missGetList = (type: 'マイリスト' | 'プレイリスト') => window.api.showErrorBox(`${type}の取得に失敗しました`, `入力した${type}は存在していますか？`).then(() => undefined);
 
 export default getListData;
