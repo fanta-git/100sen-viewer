@@ -118,7 +118,7 @@ const EditMenu: React.FC<Props> = ({ tableData }) => {
             type: 'info',
             buttons: ['キャンセル', '実行'],
             message: 'タイトルの自動抜き出しを実行しますか？',
-            detail: 'うまく曲名を抜き出せなかった曲は手直しが必要になります。',
+            detail: 'うまく曲名を抜き出せないことが多いので、抜き出し後確認して必要なものは手動で直す必要があります。',
             defaultId: 1,
             cancelId: 0
         });

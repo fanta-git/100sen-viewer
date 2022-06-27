@@ -141,10 +141,15 @@ const UtilItem: React.FC<UtilItemProps> = ({ tableData, selectedItemData }) => {
 };
 
 const EditSelector: React.FC<EditSelectorProps> = ({ selectedItem, setSelectedItem }) => {
+    const deselection = () => {
+        setSelectedItem(-1);
+        document.querySelector('.selected')?.classList.remove('selected');
+    };
+
     return (
         <div id="select-item">
             <div className="item-wrapper">
-                <button onClick={() => setSelectedItem(-1)}>選択解除</button>
+                <button onClick={deselection}>選択解除</button>
             </div>
         </div>
     );
